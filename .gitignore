@@ -1,0 +1,9 @@
+/packaging/debian/.debhelper/
+/packaging/debian/debhelper-build-stamp
+/packaging/debian/files
+/packaging/debian/storagenode.substvars
+storagenode*.buildinfo
+storagenode*.changes
+storagenode*.deb
+*~
+
