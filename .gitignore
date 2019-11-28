@@ -2,6 +2,7 @@
 /packaging/debian/debhelper-build-stamp
 /packaging/debian/files
 /packaging/debian/storagenode.substvars
+/packaging/debian/storagenode
 storagenode*.buildinfo
 storagenode*.changes
 storagenode*.deb

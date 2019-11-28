@@ -17,9 +17,16 @@ set -e
 # for details, see https://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
+BINARIES_SERVER="http://localhost:7032/debian"
 
 case "$1" in
     configure)
+	echo "Downloading binary..."
+	wget -O /tmp/storagenode.zip ${BINARIES_SERVER}/storagenode_linux_amd64.zip
+	unzip /tmp/storagenode.zip -d /var/storagenode/
+	mv /var/storagenode/storagenode_linux_amd64 /var/storagenode/storagenode
+	# so that we're in PATH easily
+	ln -s /var/storagenode/storagenode /usr/bin/storagenode
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

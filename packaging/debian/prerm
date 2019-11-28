@@ -18,7 +18,11 @@ set -e
 
 
 case "$1" in
-    remove|upgrade|deconfigure)
+    remove|upgrade)
+	rm /var/storagenode/storagenode
+    ;;
+    
+    deconfigure)
     ;;
 
     failed-upgrade)
