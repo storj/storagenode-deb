@@ -21,6 +21,8 @@ PKGDIR = debian/storagenode
 override_dh_auto_install:
 # downloaded binaries directory
 	mkdir -p ${PKGDIR}/var/storagenode
+	dh_installsystemd --name=storagenode
+	dh_installsystemd --name=storagenode-updater
 
 
 # dh_make generated override targets
