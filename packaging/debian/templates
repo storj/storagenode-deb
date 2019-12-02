@@ -1,0 +1,79 @@
+Template: storagenode/requirements
+Type: text
+Default: 
+Description: Storj V3 Storage Node installation
+ Before you begin, make sure you meet the following requirements:\n
+ - You've received an authorization token from Storj Labs\n
+ - You've generated a new identity for your storage node\n
+ - You have an ERC20 compatible wallet to receive payouts\n
+ - You've configured port forwarding for your storage node\n
+ Learn more: https://documentation.storj.io/setup/cli
+
+Template: storagenode/storagedir
+Type: string
+Default: /var/storagenode
+Description: where data will be stored.
+
+Template: storagenode/old_storagedir
+Type: string
+Default:
+Description: Old storage directory path
+
+Template: storagenode/identitydir
+Type: string
+Default: /home/
+Description: Directory holding the identity credentials.
+ Select the location of your identity files. You can copy the absolute path
+ from the output of the identity command you ran earlier.
+ Learn how to generate an identity for your storage node:
+ https://documentation.storj.io/dependencies/identity
+
+Template: storagenode/wallet
+Type: string
+Default:
+Description: Storj payout address (ERC20-compatible)
+ This payout address will receive the STORJ token payouts
+ for running the storage node.
+
+Template: storagenode/email
+Type: string
+Default:
+Description: Operator information - email address
+ We will notify you on this email address when a new version
+ has been released.
+
+Template: storagenode/external_addr
+Type: string
+Default:
+Description: External address/port (<ip>:<port>)
+ The storage node will listen for requests on port 28967.
+ You must configure your router to make this port available for public access.
+ When ready, enter the external IP address or the DDNS you configured and the port
+ you opened on your router.
+ Learn how to set up port forwarding: https://documentation.storj.io/dependencies/port-forwarding
+
+Template: storagenode/storage
+Type: string
+Default:
+Description: Advertised storage
+ The storage node will store the uploaded data to this
+ location. Select a volume with at least 500 GB of free space.
+
+Template: storagenode/diskspace
+Type: string
+Default:
+Description: Allocated disk space
+ The storage node will consume up to this amount of disk space on the
+ selected storage location. Be sure not to over-allocate space! Allow
+ at least 10\% extra for overhead. If you over-allocate space, you may
+ corrupt your database when the system attempts to store pieces when no
+ more physical space is actually available on your drive.
+
+Template: storagenode/bandwidth
+Type: string
+Default:
+Description: Advertised bandwidth
+ How much bandwidth you can allocate to the Storj network. Be sure to
+ allow for other use cases you have for your internet connection, and
+ do not allocate more than the total up and download bandwidth your
+ ISP can physically supply. The minimum bandwidth requirement is 2 TB.

@@ -23,6 +23,8 @@ override_dh_auto_install:
 	mkdir -p ${PKGDIR}/var/storagenode
 	dh_installsystemd --name=storagenode
 	dh_installsystemd --name=storagenode-updater
+	dh_installdebconf
+
 
 
 # dh_make generated override targets
