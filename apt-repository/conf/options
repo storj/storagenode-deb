@@ -1,0 +1,3 @@
+outdir +b/www
+logdir +b/logs
+gnupghome +b/gpg
