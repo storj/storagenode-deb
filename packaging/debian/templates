@@ -99,6 +99,14 @@ Description: Operator information - email address
  We will notify you on this email address when a new version
  has been released.
 
+Template: storagenode/email/wrong_format_continue
+Type: boolean
+Default: false
+Description: Do you want to continue?
+ The email address you have provided is not correct.
+ You will not be able to connect without a valid email
+ address.
+
 Template: storagenode/external_addr
 Type: string
 Default:
