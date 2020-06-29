@@ -115,6 +115,13 @@ Description: External address/port (<ip>:<port>)
  you opened on your router.
  Learn how to set up port forwarding: https://documentation.storj.io/dependencies/port-forwarding
 
+Template: storagenode/external_addr/not_ip_port_continue
+Type: boolean
+Default: false
+Description: Do you want to continue?
+ You did not specify a valid external <ip>:<port>.
+ You will not be able to connect without a valid external address.
+
 Template: storagenode/storage
 Type: string
 Default:
