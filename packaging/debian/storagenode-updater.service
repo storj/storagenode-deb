@@ -15,11 +15,11 @@ Description  = Storage Node Updater service
 After        = syslog.target
 
 [Service]
+Type         = simple
 User         = storj-storagenode
 Group        = storj-storagenode
-ExecStart    = /var/storagenode/storagenode-updater run --config-dir "/etc/storagenode"
+ExecStart    = /var/storagenode/storagenode-updater run --config-dir "/etc/storagenode" --binary-location "/var/storagenode/storagenode"
 Restart      = on-failure
-Type         = simple
 NotifyAccess = main
 
 [Install]

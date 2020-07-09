@@ -25,7 +25,6 @@ DAEMON_USER=storj-storagenode
 
 . /usr/share/debconf/confmodule
 
-
 case "$1" in
     configure)
 	installed_version="$2"
@@ -58,14 +57,33 @@ case "$1" in
 	    # so that we're in PATH easily
 	    ln -s /var/storagenode/${binary} /usr/bin/${binary}
 	done
-	adduser --system --group --no-create-home --quiet $DAEMON_USER
 
 	if [ "$old_storagedir" != "" ] && [ "$storagedir" != "$old_storagedir" ]; then
 	    echo "New storage directory: ${storagedir} (was ${old_storagedir})"
 	else
 	    echo "Storage directory: ${storagedir}"
 	fi
+
+	# storagenode setup
+	/var/storagenode/storagenode setup \
+	--config-dir "/etc/storagenode" \
+	--identity-dir "$identitydir" \
+	--operator.email "$email" \
+	--operator.wallet "$wallet" \
+	--contact.external-address "$external_addr" \
+	--storage.path "$storagedir" \
+	--storage.allocated-disk-space "$diskspace"
 	
+	# add user and fix ownership
+	adduser --system --group --no-create-home --quiet $DAEMON_USER
+
+	chown -R $DAEMON_USER:$DAEMON_USER /var/storagenode
+	chown -R $DAEMON_USER:$DAEMON_USER /var/run/storagenode
+	chown -R $DAEMON_USER:$DAEMON_USER /etc/storagenode
+	
+	# fix config permissions
+	chmod 644 /etc/storagenode/config.yaml
+
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
