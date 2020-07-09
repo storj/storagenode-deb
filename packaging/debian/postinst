@@ -83,7 +83,6 @@ case "$1" in
 	
 	# fix config permissions
 	chmod 644 /etc/storagenode/config.yaml
-
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
