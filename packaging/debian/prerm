@@ -23,7 +23,6 @@ case "$1" in
 	    rm -f /usr/bin/${binary}
 	    rm -f /var/storagenode/${binary}
 	done
-	rm -f /var/storagenode/start.bash
     ;;
     
     deconfigure)

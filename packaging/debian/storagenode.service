@@ -18,7 +18,7 @@ After        = syslog.target
 Type         = simple
 User         = storj-storagenode
 Group        = storj-storagenode
-ExecStart    = /var/storagenode/start.bash --config-dir "/etc/storagenode"
+ExecStart    = /usr/share/storagenode/start.bash --config-dir "/etc/storagenode"
 Restart      = on-failure
 NotifyAccess = main
 

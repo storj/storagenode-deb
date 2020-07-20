@@ -80,8 +80,9 @@ case "$1" in
 	chown -R $DAEMON_USER:$DAEMON_USER /var/storagenode
 	chown -R $DAEMON_USER:$DAEMON_USER /var/run/storagenode
 	chown -R $DAEMON_USER:$DAEMON_USER /etc/storagenode
+	chown -R $DAEMON_USER:$DAEMON_USER /usr/share/storagenode
 	
-	# fix config permissions
+	# fix permissions
 	chmod 644 /etc/storagenode/config.yaml
     ;;
 

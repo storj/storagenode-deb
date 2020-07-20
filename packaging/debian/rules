@@ -23,17 +23,18 @@ override_dh_auto_install:
 	mkdir -p ${PKGDIR}/var/storagenode
 	mkdir -p ${PKGDIR}/var/run/storagenode
 	mkdir -p ${PKGDIR}/etc/storagenode
-	cp debian/start.bash ${PKGDIR}/var/storagenode
+	mkdir -p ${PKGDIR}/usr/share/storagenode
+	cp debian/start.bash ${PKGDIR}/usr/share/storagenode
 	dh_installsystemd --name=storagenode
 	dh_installsystemd --name=storagenode-updater
-	dh_installdebconf
 
 override_dh_fixperms:
 	dh_fixperms
 	chmod 755 ${PKGDIR}/var/storagenode
-	chmod 755 ${PKGDIR}/var/storagenode/start.bash
 	chmod 755 ${PKGDIR}/var/run/storagenode
 	chmod 755 ${PKGDIR}/etc/storagenode
+	chmod 755 ${PKGDIR}/usr/share/storagenode
+	chmod 755 ${PKGDIR}/usr/share/storagenode/start.bash
 
 # dh_make generated override targets
 # This is example for Cmake (See https://bugs.debian.org/641051 )
