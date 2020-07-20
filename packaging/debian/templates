@@ -2,22 +2,17 @@ Template: storagenode/requirements
 Type: text
 Default: 
 Description: Storj V3 Storage Node installation
- Before you begin, make sure you meet the following requirements:\n
- - You've received an authorization token from Storj Labs\n
- - You've generated a new identity for your storage node\n
- - You have an ERC20 compatible wallet to receive payouts\n
- - You've configured port forwarding for your storage node\n
- Learn more: https://documentation.storj.io/setup/cli
+ Before you begin, make sure you meet the following requirements:
+  - You've received an authorization token from Storj Labs
+  - You've generated a new identity for your storage node
+  - You have an ERC20 compatible wallet to receive payouts
+  - You've configured port forwarding for your storage node
+  Learn more: https://documentation.storj.io/setup/cli
 
 Template: storagenode/storagedir
 Type: string
 Default: /var/storagenode
 Description: where data will be stored.
-
-Template: storagenode/old_storagedir
-Type: string
-Default:
-Description: Old storage directory path
 
 Template: storagenode/identitydir
 Type: string
@@ -27,6 +22,41 @@ Description: Directory holding the identity credentials.
  from the output of the identity command you ran earlier.
  Learn how to generate an identity for your storage node:
  https://documentation.storj.io/dependencies/identity
+
+Template: storagenode/identitydir/directory_does_not_exist_continue
+Type: boolean
+Default: false
+Description: Do you want to continue?
+ The directory you have specified does not exist. 
+ You will not be able to connect without a valid identity.
+
+Template: storagenode/identitydir/empty_string_continue
+Type: boolean
+Default: false
+Description: Do you want to continue?
+ You did not specify a directory.
+ You will not be able to connect without a valid identity.
+
+Template: storagenode/identitydir/no_identity_cert_continue
+Type: boolean
+Default: false
+Description: Do you want to continue?
+ File identity.cert not found in the selected folder.
+ You will not be able to connect without a valid identity.
+
+Template: storagenode/identitydir/no_ca_cert_continue
+Type: boolean
+Default: false
+Description: Do you want to continue?
+ File ca.cert not found in the selected folder.
+ You will not be able to connect without a valid identity.
+
+Template: storagenode/identitydir/no_identity_key_continue
+Type: boolean
+Default: false
+Description: Do you want to continue?
+ File identity.key not found in the selected folder.
+ You will not be able to connect without a valid identity.
 
 Template: storagenode/wallet
 Type: string

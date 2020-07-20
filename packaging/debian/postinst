@@ -20,7 +20,7 @@ set -e
 # for details, see https://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
-BINARIES_SERVER="http://localhost:7032/debian"
+BINARIES_SERVER="http://10.0.2.2:8080"
 DAEMON_USER=storj-storagenode
 
 . /usr/share/debconf/confmodule
@@ -29,28 +29,12 @@ DAEMON_USER=storj-storagenode
 case "$1" in
     configure)
 	installed_version="$2"
-	if [ $installed_version != "" ]; then
-	    echo "This is a reconfiguration or a reinstallation"
-	fi
-	db_get storagenode/identitydir
-	identitydir="$RET"
-	db_get storagenode/wallet
-	wallet="$RET"
-	db_get storagenode/email
-	email="$RET"
-	db_get storagenode/external_addr
-	external_addr="$RET"
-	db_get storagenode/storagedir
-	storagedir="$RET"
-	db_get storagenode/old_storagedir
-	old_storagedir="$RET"
-	db_get storagenode/diskspace
-	diskspace="$RET"
-	db_get storagenode/bandwidth
-	bandwidth="$RET"
+	#if [ $installed_version != "" ]; then
+	#    echo "This is a reconfiguration or a reinstallation"
+	#fi
 
 	# TODO: should not download binaries if it's only a reconfigure
-	echo "Downloading binaries..."
+	#echo "Downloading binaries..."
 	for binary in "storagenode" "storagenode-updater"; do
 	    wget -O /tmp/${binary}.zip ${BINARIES_SERVER}/${binary}_linux_amd64.zip
 	    unzip /tmp/${binary}.zip -d /var/storagenode/
@@ -60,11 +44,11 @@ case "$1" in
 	done
 	adduser --system --group --no-create-home --quiet $DAEMON_USER
 
-	if [ "$old_storagedir" != "" ] && [ "$storagedir" != "$old_storagedir" ]; then
-	    echo "New storage directory: ${storagedir} (was ${old_storagedir})"
-	else
-	    echo "Storage directory: ${storagedir}"
-	fi
+#	if [ "$old_storagedir" != "" ] && [ "$storagedir" != "$old_storagedir" ]; then
+#	    echo "New storage directory: ${storagedir} (was ${old_storagedir})"
+#	else
+#	    echo "Storage directory: ${storagedir}"
+#	fi
 	
     ;;
 
