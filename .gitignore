@@ -1,5 +1,7 @@
 /packaging/debian/.debhelper/
 /packaging/debian/debhelper-build-stamp
+/packaging/debian/*.debhelper
+/packaging/debian/*.log
 /packaging/debian/files
 /packaging/debian/storagenode.substvars
 /packaging/debian/storagenode

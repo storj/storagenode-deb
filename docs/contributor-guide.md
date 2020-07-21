@@ -6,7 +6,7 @@ To build the package, you will need the debian packaging tools: build-essential,
 ## Build the package
 Once they are installed, go to the 'packaging' directory and run the following command:
 `
-dpkg-buildpackage -us -ub -b
+dpkg-buildpackage -us -uc -b
 `
 If successful, it should create a storagenode-version.deb file. You can install it on a debian system using the following command:
 `
