@@ -2,8 +2,8 @@ def withDockerNetwork(Closure inner) {
     try {
         networkId = UUID.randomUUID().toString()
         sh "docker network create ${networkId}"
-        inner.call(networkId)
 	sh "docker network ls"
+        inner.call(networkId)
     } finally {
         sh "docker network rm ${networkId}"
     }
