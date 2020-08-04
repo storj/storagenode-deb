@@ -23,5 +23,5 @@ Restart      = on-failure
 NotifyAccess = main
 
 [Install]
-Alias	     = storagenode-updater
+Alias        = storagenode-updater
 WantedBy     = multi-user.target

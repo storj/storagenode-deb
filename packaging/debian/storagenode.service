@@ -11,19 +11,17 @@
 # - To start run systemctl start storagenode
 
 [Unit]
-Description          = Storage Node service
-After                = syslog.target
+Description  = Storage Node service
+After        = syslog.target
 
 [Service]
-Type                 = simple
-User                 = storj-storagenode
-Group                = storj-storagenode
-RuntimeDirectory     = storagenode
-RuntimeDirectoryMode = 0755
-ExecStart            = /var/lib/storagenode/storagenode run --config-dir "/etc/storagenode"
-Restart              = on-failure
-NotifyAccess         = main
+Type         = simple
+User         = storj-storagenode
+Group        = storj-storagenode
+ExecStart    = /var/lib/storagenode/storagenode run --config-dir "/etc/storagenode"
+Restart      = on-failure
+NotifyAccess = main
 
 [Install]
-Alias	             = storagenode
-WantedBy             = multi-user.target
+Alias        = storagenode
+WantedBy     = multi-user.target
