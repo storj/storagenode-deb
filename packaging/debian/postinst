@@ -51,11 +51,12 @@ case "$1" in
 	# TODO: should not download binaries if it's only a reconfigure
 	echo "Downloading binaries..."
 	for binary in "storagenode" "storagenode-updater"; do
-	    wget -O /tmp/${binary}.zip ${BINARIES_SERVER}/${binary}_linux_amd64.zip
-	    unzip /tmp/${binary}.zip -d /var/storagenode/
-	    mv /var/storagenode/${binary}_linux_amd64 /var/storagenode/${binary}
+		tmpfile=$(mktemp /tmp/${binary}.zip.XXXXXX)
+	    wget -O $tmpfile ${BINARIES_SERVER}/${binary}_linux_amd64.zip
+	    unzip $tmpfile -d /var/lib/storagenode
+	    mv /var/lib/storagenode/${binary}_linux_amd64 /var/lib/storagenode/${binary}
 	    # so that we're in PATH easily
-	    ln -s /var/storagenode/${binary} /usr/bin/${binary}
+	    ln -s /var/lib/storagenode/${binary} /usr/bin/${binary}
 	done
 
 	if [ "$old_storagedir" != "" ] && [ "$storagedir" != "$old_storagedir" ]; then
@@ -65,7 +66,7 @@ case "$1" in
 	fi
 
 	# storagenode setup
-	/var/storagenode/storagenode setup \
+	/var/lib/storagenode/storagenode setup \
 	--config-dir "/etc/storagenode" \
 	--identity-dir "$identitydir" \
 	--operator.email "$email" \
@@ -77,10 +78,8 @@ case "$1" in
 	# add user and fix ownership
 	adduser --system --group --no-create-home --quiet $DAEMON_USER
 
-	chown -R $DAEMON_USER:$DAEMON_USER /var/storagenode
-	chown -R $DAEMON_USER:$DAEMON_USER /var/run/storagenode
+	chown -R $DAEMON_USER:$DAEMON_USER /var/lib/storagenode
 	chown -R $DAEMON_USER:$DAEMON_USER /etc/storagenode
-	chown -R $DAEMON_USER:$DAEMON_USER /usr/share/storagenode
 	
 	# fix permissions
 	chmod 644 /etc/storagenode/config.yaml

@@ -11,7 +11,7 @@ Description: Storj V3 Storage Node installation
 
 Template: storagenode/storagedir
 Type: string
-Default: /var/storagenode
+Default: /var/lib/storagenode
 Description: where data will be stored.
 
 Template: storagenode/old_storagedir

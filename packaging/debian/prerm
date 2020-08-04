@@ -21,7 +21,7 @@ case "$1" in
     remove|upgrade)
 	for binary in "storagenode" "storagenode-updater"; do
 	    rm -f /usr/bin/${binary}
-	    rm -f /var/storagenode/${binary}
+	    rm -f /var/lib/storagenode/${binary}
 	done
     ;;
     
