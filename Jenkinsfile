@@ -53,7 +53,7 @@ pipeline {
 			}
 		}
 		stage('Test Repository') {
-			agent any
+//			agent any
 			steps {
 				script {
 					def apt_repository = docker.build("apt-nginx", "-f ./apt-repository/nginx/Dockerfile .")
@@ -65,7 +65,6 @@ pipeline {
 								--network ${n} -u root:root
 							""") {
 								sh "echo \"deb [trusted=yes] http://apt-repository buster-staging main\" > /etc/apt/sources.list.d/storjlabs.list"
-								sh "ifconfig"
 								sh "apt-get update"
 								sh "apt-cache search storagenode"
 							}
