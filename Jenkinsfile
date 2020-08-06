@@ -10,7 +10,7 @@ def withDockerNetwork(Closure inner) {
 }
 
 pipeline {
-	agent any
+	agent none
 	stages {
 		stage('Build Package') {
 			agent {
@@ -33,6 +33,7 @@ pipeline {
 				unstash 'deb-package'
 			}
 		}*/
+		
 		stage('Build Repository') {
 			agent {
 				dockerfile {
@@ -64,6 +65,7 @@ pipeline {
 								--network ${n} -u root:root
 							""") {
 								sh "echo \"deb [trusted=yes] http://apt-repository buster-staging main\" > /etc/apt/sources.list.d/storjlabs.list"
+								sh "ifconfig"
 								sh "apt-get update"
 								sh "apt-cache search storagenode"
 							}
