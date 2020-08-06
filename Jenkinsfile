@@ -59,7 +59,7 @@ pipeline {
 				script {
 					def apt_repository = docker.build("apt-nginx", "-f ./apt-repository/nginx/Dockerfile .")
 					def debian_buster_client = docker.build("debian-client", "-f ./docker/Dockerfile.debian-buster .")
-					apt_repository.withRun("--network ${n} --name apt-repository").inside("""
+					apt_repository.withRun("").inside("""
 					""") {
 					sh "ls"
 					sh "ls apt-repository"
