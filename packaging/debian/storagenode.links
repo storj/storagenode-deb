@@ -1,0 +1,2 @@
+/var/lib/storagenode/storagenode-updater /usr/bin
+/var/lib/storagenode/storagenode         /usr/bin
