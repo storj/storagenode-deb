@@ -50,26 +50,5 @@ pipeline {
 				sh 'cd apt-repository && reprepro includedeb buster-staging ../*.deb'
 			}
 		}
-		stage('Test Repository') {
-			agent any
-			steps {
-				script {
-					def apt_repository = docker.build("apt-nginx", "-f ./apt-repository/nginx/Dockerfile .")
-					def debian_buster_client = docker.build("debian-client", "-f ./docker/Dockerfile.debian-buster .")
-
-					withDockerNetwork{ n ->
-						apt_repository.withRun("--network ${n} --name apt-repository") { c ->
-							debian_buster_client.inside("""
-								--network ${n} -u root:root
-							""") {
-								sh "echo \"deb [trusted=yes] http://apt-repository buster-staging main\" > /etc/apt/sources.list.d/storjlabs.list"
-								sh "apt-get update"
-								sh "apt-cache search storagenode"
-							}
-						}
-					}
-				}
-			}
-		}
 	}
 }
