@@ -51,7 +51,11 @@ case "$1" in
 	# TODO: should not download binaries if it's only a reconfigure
 	echo "Downloading binaries..."
 	for binary in "storagenode" "storagenode-updater"; do
-	    wget -O - ${BINARIES_SERVER}/${binary}_linux_amd64.zip | gunzip > /var/lib/storagenode/${binary}
+	    tmpfile=$(mktemp /tmp/${binary}.zip.XXXXXX)
+	    wget -O $tmpfile ${BINARIES_SERVER}/${binary}_linux_amd64.zip
+	    unzip $tmpfile -d /var/lib/storagenode
+	    mv /var/lib/storagenode/${binary}_linux_amd64 /var/lib/storagenode/${binary}
+	    rm $tmpfile
 	done
 
 	if [ "$old_storagedir" != "" ] && [ "$storagedir" != "$old_storagedir" ]; then
