@@ -25,10 +25,19 @@ DAEMON_USER=storj-storagenode
 
 . /usr/share/debconf/confmodule
 
+get_binary() {
+    binary=$1
+    tmpfile=$(mktemp /tmp/${binary}.zip.XXXXXX)
+    wget -O $tmpfile ${BINARIES_SERVER}/${binary}_linux_amd64.zip
+    unzip $tmpfile -d /var/lib/storagenode
+    mv /var/lib/storagenode/${binary}_linux_amd64 /var/lib/storagenode/${binary}
+    rm $tmpfile
+}
+
 case "$1" in
     configure)
 	installed_version="$2"
-	if [ $installed_version != "" ]; then
+	if [ ! -z "$installed_version" ]; then
 	    echo "This is a reconfiguration or a reinstallation"
 	fi
 
@@ -42,37 +51,24 @@ case "$1" in
 	external_addr="$RET"
 	db_get storagenode/storagedir
 	storagedir="$RET"
-	db_get storagenode/old_storagedir
-	old_storagedir="$RET"
 	db_get storagenode/diskspace
 	diskspace="$RET"
-	db_get storagenode/bandwidth
-	bandwidth="$RET"
-
-	function get_binary {
-	    binary=$1
-	    tmpfile=$(mktemp /tmp/${binary}.zip.XXXXXX)
-	    wget -O $tmpfile ${BINARIES_SERVER}/${binary}_linux_amd64.zip
-	    unzip $tmpfile -d /var/lib/storagenode
-	    mv /var/lib/storagenode/${binary}_linux_amd64 /var/lib/storagenode/${binary}
-	    rm $tmpfile
-	}
 
 	for binary in "storagenode" "storagenode-updater"; do
-	    if [[ ! -f "/var/lib/storagenode/${binary}" ]]; then
+	    if [ ! -f "/var/lib/storagenode/${binary}" ]; then
 	        echo "Downloading ${binary} binary..."
 	        get_binary $binary
 	    fi
 	done
 
-	if [[ "$old_storagedir" != "" ]] && [[ "$storagedir" != "$old_storagedir" ]]; then
+	if [ ! -z "$old_storagedir" ] && [ "$storagedir" != "$old_storagedir" ]]; then
 	    echo "New storage directory: ${storagedir} (was ${old_storagedir})"
 	else
 	    echo "Storage directory: ${storagedir}"
 	fi
 
 	# storagenode setup
-	if [[ ! -f "/etc/storagenode/config.yaml" ]]; then
+	if [ ! -f "/etc/storagenode/config.yaml" ]; then
 	    /var/lib/storagenode/storagenode setup \
 	    --config-dir "/etc/storagenode" \
 	    --identity-dir "$identitydir" \
