@@ -20,7 +20,7 @@ set -e
 # for details, see https://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
-BINARIES_SERVER="http://localhost:7032/debian"
+BINARIES_SERVER="http://10.0.2.2:8080"
 DAEMON_USER=storj-storagenode
 
 . /usr/share/debconf/confmodule
