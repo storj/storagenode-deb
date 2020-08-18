@@ -37,7 +37,7 @@ get_binary() {
 case "$1" in
     configure)
 	installed_version="$2"
-	if [ ! -z "$installed_version" ]; then
+	if [ -n "$installed_version" ]; then
 	    echo "This is a reconfiguration or a reinstallation"
 	fi
 
@@ -61,7 +61,7 @@ case "$1" in
 	    fi
 	done
 
-	if [ ! -z "$old_storagedir" ] && [ "$storagedir" != "$old_storagedir" ]]; then
+	if [ -n "$old_storagedir" ] && [ "$storagedir" != "$old_storagedir" ]; then
 	    echo "New storage directory: ${storagedir} (was ${old_storagedir})"
 	else
 	    echo "Storage directory: ${storagedir}"
