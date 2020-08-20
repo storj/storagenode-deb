@@ -65,17 +65,22 @@ case "$1" in
 	    fi
 	done
 
+	# TODO: handle storage dir change during reconfigure
 	if [ -n "$old_storagedir" ] && [ "$storagedir" != "$old_storagedir" ]; then
 	    echo "New storage directory: ${storagedir} (was ${old_storagedir})"
 	else
 	    echo "Storage directory: ${storagedir}"
 	fi
 
+	# copy identity
+	cp ${identitydir}/identity.cert /etc/storagenode/identity
+	cp ${identitydir}/identity.key /etc/storagenode/identity
+
 	# storagenode setup
 	if [ ! -f "/etc/storagenode/config.yaml" ]; then
 	    /var/lib/storagenode/storagenode setup \
 	    --config-dir "/etc/storagenode" \
-	    --identity-dir "$identitydir" \
+	    --identity-dir "/etc/storagenode/identity" \
 	    --operator.email "$email" \
 	    --operator.wallet "$wallet" \
 	    --contact.external-address "$external_addr" \
