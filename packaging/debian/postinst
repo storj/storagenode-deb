@@ -54,6 +54,13 @@ case "$1" in
 	db_get storagenode/diskspace
 	diskspace="$RET"
 
+	echo "Identity directory === $identitydir"
+	echo "Wallet address === $wallet"
+	echo "Email === $email"
+	echo "External address === $external_addr"
+	echo "Storage directory === $storagedir"
+	echo "Disk space === $diskspace"
+
 	for binary in "storagenode" "storagenode-updater"; do
 	    if [ ! -f "/var/lib/storagenode/${binary}" ]; then
 	        echo "Downloading ${binary} binary..."
@@ -76,7 +83,7 @@ case "$1" in
 	    --operator.wallet "$wallet" \
 	    --contact.external-address "$external_addr" \
 	    --storage.path "$storagedir" \
-	    --storage.allocated-disk-space "$diskspace"
+#	    --storage.allocated-disk-space "$diskspace"
 
 	    # fix permissions
 	    chmod 644 /etc/storagenode/config.yaml
@@ -89,6 +96,7 @@ case "$1" in
 
 	chown -R $DAEMON_USER:$DAEMON_USER /var/lib/storagenode
 	chown -R $DAEMON_USER:$DAEMON_USER /etc/storagenode
+	#chown -R $DAEMON_USER:$DAEMON_USER $identitydir
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
