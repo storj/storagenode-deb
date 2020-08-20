@@ -59,6 +59,10 @@ case "$1" in
 	        echo "Downloading ${binary} binary..."
 	        get_binary $binary
 	    fi
+
+	    if [ ! -f "/usr/bin/${binary}" ]; then
+			ln -s /var/lib/storagenode/${binary} /usr/bin/${binary}
+	    fi
 	done
 
 	if [ -n "$old_storagedir" ] && [ "$storagedir" != "$old_storagedir" ]; then
