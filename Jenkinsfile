@@ -8,16 +8,15 @@ def withDockerNetwork(Closure inner) {
         sh "docker network rm ${networkId}"
     }
 }
-
-node {
-		stage('Build Package') {
-			
-			def builderImage = docker.build("builder-image", "-f docker/Dockerfile.builder .")
-			builderImage.inside {
-				sh 'cd packaging && dpkg-buildpackage -us -uc -b'
-				//stash includes: '*.deb', name: 'deb-package'
+stage('Build Package') {
+	node {
+		def builderImage = docker.build("builder-image", "-f docker/Dockerfile.builder .")
+		builderImage.inside {
+			sh 'cd packaging && dpkg-buildpackage -us -uc -b'
+			stash includes: '*.deb', name: 'deb-package'
 			}
 		}
+}
 		// TODO
 		/*stage('Test Package') {
 			agent {
@@ -28,25 +27,28 @@ node {
 			}
 		}*/
 		
-		// stage('Build Repository') {
+stage('Build Repository') {
 		// 	agent {
 		// 		dockerfile {
 		// 			filename './apt-repository/Dockerfile.reprepro'
 		// 			dir '.'
 		// 		}
 		// 	}
-		// 	steps {
-		// 		sh 'git clean -fdx'
-		// 		// check reprepro config
-		// 		sh "cd apt-repository && reprepro check buster-staging"
-		// 		// include new deb
-		// 		unstash 'deb-package'
-		// 		// for tests, we need to tell reprepro to not sign the packages
-		// 		sh 'sed -i \'/SignWith/d\' apt-repository/conf/distributions'
-		// 		sh 'cd apt-repository && reprepro includedeb buster-staging ../*.deb'
-		// 		sh 'ls'
-		// 	}
-		// }
+		node {
+			def repoBuilderImage = docker.build("repo-builder", "-f ./apt-repository/Dockerfile.reprepro")
+			repoBuilderImage.inside {
+				sh 'git clean -fdx'
+				// check reprepro config
+				sh "cd apt-repository && reprepro check buster-staging"
+				// include new deb
+				unstash 'deb-package'
+				// for tests, we need to tell reprepro to not sign the packages
+				sh 'sed -i \'/SignWith/d\' apt-repository/conf/distributions'
+				sh 'cd apt-repository && reprepro includedeb buster-staging ../*.deb'
+				sh 'ls'
+			}
+		}
+}
 		// stage('Test Repository') {
 		// 	agent { docker 'maven:3-alpine' }
 		// 	steps {
@@ -68,4 +70,3 @@ node {
 		// 		}
 		// 	}
 		// }
-}
