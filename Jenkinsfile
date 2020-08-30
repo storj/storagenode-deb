@@ -12,7 +12,7 @@ def withDockerNetwork(Closure inner) {
 node {
 		stage('Build Package') {
 			
-			def builderImage = docker.build("builder-image", "-f docker/Dockerfile.builder")
+			def builderImage = docker.build("builder-image", "-f docker/Dockerfile.builder .")
 			builderImage.inside {
 				sh 'cd packaging && dpkg-buildpackage -us -uc -b'
 				//stash includes: '*.deb', name: 'deb-package'
