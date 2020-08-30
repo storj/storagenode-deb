@@ -9,19 +9,13 @@ def withDockerNetwork(Closure inner) {
     }
 }
 
-pipeline {
-	agent none
-	stages {
+node {
 		stage('Build Package') {
-			agent {
-				dockerfile {
-					filename 'docker/Dockerfile.builder'
-					dir '.'
-				}
-			}
-			steps {
+			
+			def builderImage = docker.build("builder-image", "-f docker/Dockerfile.builder")
+			builderImage.inside {
 				sh 'cd packaging && dpkg-buildpackage -us -uc -b'
-				stash includes: '*.deb', name: 'deb-package'
+				//stash includes: '*.deb', name: 'deb-package'
 			}
 		}
 		// TODO
@@ -34,45 +28,44 @@ pipeline {
 			}
 		}*/
 		
-		stage('Build Repository') {
-			agent {
-				dockerfile {
-					filename './apt-repository/Dockerfile.reprepro'
-					dir '.'
-				}
-			}
-			steps {
-				sh 'git clean -fdx'
-				// check reprepro config
-				sh "cd apt-repository && reprepro check buster-staging"
-				// include new deb
-				unstash 'deb-package'
-				// for tests, we need to tell reprepro to not sign the packages
-				sh 'sed -i \'/SignWith/d\' apt-repository/conf/distributions'
-				sh 'cd apt-repository && reprepro includedeb buster-staging ../*.deb'
-				sh 'ls'
-			}
-		}
-		stage('Test Repository') {
-			agent { docker 'maven:3-alpine' }
-			steps {
-				script {
-					def apt_repository = docker.build("apt-nginx", "-f ./apt-repository/nginx/Dockerfile .")
-					def debian_buster_client = docker.build("debian-client", "-f ./docker/Dockerfile.debian-buster .")
+		// stage('Build Repository') {
+		// 	agent {
+		// 		dockerfile {
+		// 			filename './apt-repository/Dockerfile.reprepro'
+		// 			dir '.'
+		// 		}
+		// 	}
+		// 	steps {
+		// 		sh 'git clean -fdx'
+		// 		// check reprepro config
+		// 		sh "cd apt-repository && reprepro check buster-staging"
+		// 		// include new deb
+		// 		unstash 'deb-package'
+		// 		// for tests, we need to tell reprepro to not sign the packages
+		// 		sh 'sed -i \'/SignWith/d\' apt-repository/conf/distributions'
+		// 		sh 'cd apt-repository && reprepro includedeb buster-staging ../*.deb'
+		// 		sh 'ls'
+		// 	}
+		// }
+		// stage('Test Repository') {
+		// 	agent { docker 'maven:3-alpine' }
+		// 	steps {
+		// 		script {
+		// 			def apt_repository = docker.build("apt-nginx", "-f ./apt-repository/nginx/Dockerfile .")
+		// 			def debian_buster_client = docker.build("debian-client", "-f ./docker/Dockerfile.debian-buster .")
 
-					withDockerNetwork{ n ->
-						apt_repository.withRun("--network ${n} --name apt-repository") { c ->
-							debian_buster_client.inside("""
-								--network ${n} -u root:root
-							""") {
-								sh "echo \"deb [trusted=yes] http://apt-repository buster-staging main\" > /etc/apt/sources.list.d/storjlabs.list"
-								sh "apt-get update"
-								sh "apt-cache search storagenode"
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+		// 			withDockerNetwork{ n ->
+		// 				apt_repository.withRun("--network ${n} --name apt-repository") { c ->
+		// 					debian_buster_client.inside("""
+		// 						--network ${n} -u root:root
+		// 					""") {
+		// 						sh "echo \"deb [trusted=yes] http://apt-repository buster-staging main\" > /etc/apt/sources.list.d/storjlabs.list"
+		// 						sh "apt-get update"
+		// 						sh "apt-cache search storagenode"
+		// 					}
+		// 				}
+		// 			}
+		// 		}
+		// 	}
+		// }
 }
