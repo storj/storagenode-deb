@@ -35,7 +35,7 @@ stage('Build Repository') {
 		// 		}
 		// 	}
 		node {
-			def repoBuilderImage = docker.build("repo-builder", "-f ./apt-repository/Dockerfile.reprepro")
+			def repoBuilderImage = docker.build("repo-builder", "-f ./apt-repository/Dockerfile.reprepro .")
 			repoBuilderImage.inside {
 				sh 'git clean -fdx'
 				// check reprepro config
