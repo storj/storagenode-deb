@@ -14,13 +14,11 @@ set -e
 # for details, see https://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
-supported_archs=(
-    amd64
-)
+supported_archs="amd64 arm arm64"
 
 is_supported_architecture() {
-    for supported_arch in ${supported_archs[@]}; do
-        if [ "$1" == "$supported_arch" ]; then
+    for supported_arch in ${supported_archs}; do
+        if [ "$1" = "$supported_arch" ]; then
             return 0
         fi
     done

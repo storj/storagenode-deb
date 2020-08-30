@@ -26,6 +26,9 @@ DAEMON_USER=storj-storagenode
 . /usr/share/debconf/confmodule
 
 arch=$(dpkg --print-architecture)
+if [ "$arch" = "armhf" ]; then
+    arch="arm" # use GOARCH notation
+fi
 
 get_binary() {
     binary=$1
@@ -33,12 +36,12 @@ get_binary() {
 
     wget -O $tmpfile ${BINARIES_SERVER}/${binary}_linux_${arch}.zip
     unzip $tmpfile -d /var/lib/storagenode
-    mv /var/lib/storagenode/${binary}_linux_amd64 /var/lib/storagenode/${binary}
+    mv /var/lib/storagenode/${binary}_linux_${arch} /var/lib/storagenode/${binary}
     rm $tmpfile
 }
 
 case "$1" in
-    configure)
+    configure|abort-upgrade|abort-remove)
 	installed_version="$2"
 	if [ -n "$installed_version" ]; then
 	    echo "This is a reconfiguration or a reinstallation"
@@ -103,7 +106,7 @@ case "$1" in
 	chown -R $DAEMON_USER:$DAEMON_USER /etc/storagenode
     ;;
 
-    abort-upgrade|abort-remove|abort-deconfigure)
+    abort-deconfigure)
     ;;
 
     *)
