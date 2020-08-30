@@ -27,8 +27,9 @@ stage('Build Package') {
 			}
 		}*/
 		
-stage('Build Repository') {
 	node {
+stage('Build Repository') {
+	
 		def repoBuilderImage = docker.build("repo-builder", "-f ./apt-repository/Dockerfile.reprepro .")
 		repoBuilderImage.inside() {
 			sh 'git clean -fdx'
@@ -41,9 +42,9 @@ stage('Build Repository') {
 			sh 'cd apt-repository && reprepro includedeb buster-staging ../*.deb'
 			}
 		}
-}
+
 stage('Test Repository') {
-	node {
+
 		def apt_repository = docker.build("apt-nginx", "-f ./apt-repository/nginx/Dockerfile .")
 		def debian_buster_client = docker.build("debian-client", "-f ./docker/Dockerfile.debian-buster .")
 
