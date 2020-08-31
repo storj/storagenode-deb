@@ -27,7 +27,7 @@ stage('Build Package') {
 			}
 		}*/
 		
-	node {
+node {
 stage('Build Repository') {
 	
 		def repoBuilderImage = docker.build("repo-builder", "-f ./apt-repository/Dockerfile.reprepro .")
