@@ -67,7 +67,7 @@ case "$1" in
 	    fi
 
 	    if [ ! -f "/usr/bin/${binary}" ]; then
-			ln -s /var/lib/storagenode/${binary} /usr/bin/${binary}
+		    ln -s /var/lib/storagenode/${binary} /usr/bin/${binary}
 	    fi
 	done
 
@@ -79,8 +79,12 @@ case "$1" in
 	fi
 
 	# copy identity
-	cp ${identitydir}/identity.cert /etc/storagenode/identity
-	cp ${identitydir}/identity.key /etc/storagenode/identity
+	if [ ! -f "/etc/storagenode/identity/identity.cert" ]; then
+	    cp ${identitydir}/identity.cert /etc/storagenode/identity
+	fi
+	if [ ! -f "/etc/storagenode/identity/identity.key" ]; then
+	    cp ${identitydir}/identity.key /etc/storagenode/identity
+	fi
 
 	# storagenode setup
 	if [ ! -f "/etc/storagenode/config.yaml" ]; then
