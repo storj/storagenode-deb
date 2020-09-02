@@ -14,7 +14,7 @@ set -e
 # for details, see https://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
-supported_archs="amd64 arm arm64"
+supported_archs="amd64 armhf arm64"
 
 is_supported_architecture() {
     for supported_arch in ${supported_archs}; do
@@ -29,9 +29,6 @@ is_supported_architecture() {
 case "$1" in
     install|upgrade)
         arch=$(dpkg --print-architecture)
-	    if [ "$arch" = "armhf" ]; then
-	        arch="arm" # use GOARCH notation
-	    fi
 
         if ! is_supported_architecture "$arch"; then
             echo "architecture ${arch} is not supported" >&2
