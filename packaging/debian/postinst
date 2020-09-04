@@ -25,34 +25,92 @@ DAEMON_USER=storj-storagenode
 
 . /usr/share/debconf/confmodule
 
+arch=$(dpkg --print-architecture)
+if [ "$arch" = "armhf" ]; then
+    arch="arm" # use GOARCH notation
+fi
+
+get_binary() {
+    binary=$1
+    tmpfile=$(mktemp /tmp/${binary}.zip.XXXXXX)
+
+    wget -O $tmpfile ${BINARIES_SERVER}/${binary}_linux_${arch}.zip
+    unzip $tmpfile -d /var/lib/storagenode
+    mv /var/lib/storagenode/${binary}_linux_${arch} /var/lib/storagenode/${binary}
+    rm $tmpfile
+}
 
 case "$1" in
-    configure)
+    configure|abort-upgrade|abort-remove)
 	installed_version="$2"
-	#if [ $installed_version != "" ]; then
-	#    echo "This is a reconfiguration or a reinstallation"
-	#fi
+	if [ -n "$installed_version" ]; then
+	    echo "This is a reconfiguration or a reinstallation"
+	fi
 
-	# TODO: should not download binaries if it's only a reconfigure
-	#echo "Downloading binaries..."
+	db_get storagenode/identitydir
+	identitydir="$RET"
+	db_get storagenode/wallet
+	wallet="$RET"
+	db_get storagenode/email
+	email="$RET"
+	db_get storagenode/external_addr
+	external_addr="$RET"
+	db_get storagenode/storagedir
+	storagedir="$RET"
+	db_get storagenode/diskspace
+	diskspace="$RET"
+
 	for binary in "storagenode" "storagenode-updater"; do
-	    wget -O /tmp/${binary}.zip ${BINARIES_SERVER}/${binary}_linux_amd64.zip
-	    unzip /tmp/${binary}.zip -d /var/storagenode/
-	    mv /var/storagenode/${binary}_linux_amd64 /var/storagenode/${binary}
-	    # so that we're in PATH easily
-	    ln -s /var/storagenode/${binary} /usr/bin/${binary}
-	done
-	adduser --system --group --no-create-home --quiet $DAEMON_USER
+	    if [ ! -f "/var/lib/storagenode/${binary}" ]; then
+	        echo "Downloading ${binary} binary..."
+	        get_binary $binary
+	    fi
 
-#	if [ "$old_storagedir" != "" ] && [ "$storagedir" != "$old_storagedir" ]; then
-#	    echo "New storage directory: ${storagedir} (was ${old_storagedir})"
-#	else
-#	    echo "Storage directory: ${storagedir}"
-#	fi
+	    if [ ! -f "/usr/bin/${binary}" ]; then
+		    ln -s /var/lib/storagenode/${binary} /usr/bin/${binary}
+	    fi
+	done
+
+	# TODO: handle storage dir change during reconfigure
+	if [ -n "$old_storagedir" ] && [ "$storagedir" != "$old_storagedir" ]; then
+	    echo "New storage directory: ${storagedir} (was ${old_storagedir})"
+	else
+	    echo "Storage directory: ${storagedir}"
+	fi
+
+	# copy identity
+	if [ ! -f "/etc/storagenode/identity/identity.cert" ]; then
+	    cp ${identitydir}/identity.cert /etc/storagenode/identity
+	fi
+	if [ ! -f "/etc/storagenode/identity/identity.key" ]; then
+	    cp ${identitydir}/identity.key /etc/storagenode/identity
+	fi
+
+	# storagenode setup
+	if [ ! -f "/etc/storagenode/config.yaml" ]; then
+	    /var/lib/storagenode/storagenode setup \
+	    --config-dir "/etc/storagenode" \
+	    --identity-dir "/etc/storagenode/identity" \
+	    --operator.email "$email" \
+	    --operator.wallet "$wallet" \
+	    --contact.external-address "$external_addr" \
+	    --storage.path "$storagedir" \
+	    --storage.allocated-disk-space "$diskspace"
+
+	    # fix permissions
+	    chmod 644 /etc/storagenode/config.yaml
+	fi
 	
+	# add user and fix ownership
+	if ! getent passwd $DAEMON_USER >/dev/null; then
+	    adduser --system --group --disabled-login --home /var/lib/storagenode --quiet $DAEMON_USER
+	fi
+
+	chown -R $DAEMON_USER:$DAEMON_USER /var/lib/storagenode
+	chown -R $DAEMON_USER:$DAEMON_USER /etc/storagenode
     ;;
 
-    abort-upgrade|abort-remove|abort-deconfigure)
+    abort-deconfigure)
     ;;
 
     *)

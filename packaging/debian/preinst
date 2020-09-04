@@ -1,4 +1,5 @@
 #!/bin/sh
+
 # preinst script for storagenode
 #
 # see: dh_installdeb(1)
@@ -13,9 +14,26 @@ set -e
 # for details, see https://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
+supported_archs="amd64 armhf arm64"
+
+is_supported_architecture() {
+    for supported_arch in ${supported_archs}; do
+        if [ "$1" = "$supported_arch" ]; then
+            return 0
+        fi
+    done
+
+    return 1
+}
 
 case "$1" in
     install|upgrade)
+        arch=$(dpkg --print-architecture)
+
+        if ! is_supported_architecture "$arch"; then
+            echo "architecture ${arch} is not supported" >&2
+            exit 1
+        fi
     ;;
 
     abort-upgrade)
