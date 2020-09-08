@@ -25,17 +25,23 @@ DAEMON_USER=storj-storagenode
 
 . /usr/share/debconf/confmodule
 
+arch=$(dpkg --print-architecture)
+if [ "$arch" = "armhf" ]; then
+    arch="arm" # use GOARCH notation
+fi
+
 get_binary() {
     binary=$1
     tmpfile=$(mktemp /tmp/${binary}.zip.XXXXXX)
-    wget -O $tmpfile ${BINARIES_SERVER}/${binary}_linux_amd64.zip
+
+    wget -O $tmpfile ${BINARIES_SERVER}/${binary}_linux_${arch}.zip
     unzip $tmpfile -d /var/lib/storagenode
-    mv /var/lib/storagenode/${binary}_linux_amd64 /var/lib/storagenode/${binary}
+    mv /var/lib/storagenode/${binary}_linux_${arch} /var/lib/storagenode/${binary}
     rm $tmpfile
 }
 
 case "$1" in
-    configure)
+    configure|abort-upgrade|abort-remove)
 	installed_version="$2"
 	if [ -n "$installed_version" ]; then
 	    echo "This is a reconfiguration or a reinstallation"
@@ -53,7 +59,6 @@ case "$1" in
 	storagedir="$RET"
 	db_get storagenode/diskspace
 	diskspace="$RET"
-
 	echo "Identity directory === $identitydir"
 	echo "Wallet address === $wallet"
 	echo "Email === $email"
@@ -68,7 +73,7 @@ case "$1" in
 	    fi
 
 	    if [ ! -f "/usr/bin/${binary}" ]; then
-			ln -s /var/lib/storagenode/${binary} /usr/bin/${binary}
+		    ln -s /var/lib/storagenode/${binary} /usr/bin/${binary}
 	    fi
 	done
 
@@ -80,8 +85,12 @@ case "$1" in
 	fi
 
 	# copy identity
-	cp ${identitydir}/identity.cert /etc/storagenode/identity
-	cp ${identitydir}/identity.key /etc/storagenode/identity
+	if [ ! -f "/etc/storagenode/identity/identity.cert" ]; then
+	    cp ${identitydir}/identity.cert /etc/storagenode/identity
+	fi
+	if [ ! -f "/etc/storagenode/identity/identity.key" ]; then
+	    cp ${identitydir}/identity.key /etc/storagenode/identity
+	fi
 
 	# storagenode setup
 	if [ ! -f "/etc/storagenode/config.yaml" ]; then
@@ -92,7 +101,7 @@ case "$1" in
 	    --operator.wallet "$wallet" \
 	    --contact.external-address "$external_addr" \
 	    --storage.path "$storagedir" \
-#	    --storage.allocated-disk-space "$diskspace"
+	    --storage.allocated-disk-space "$diskspace"
 
 	    # fix permissions
 	    chmod 644 /etc/storagenode/config.yaml
@@ -105,10 +114,9 @@ case "$1" in
 
 	chown -R $DAEMON_USER:$DAEMON_USER /var/lib/storagenode
 	chown -R $DAEMON_USER:$DAEMON_USER /etc/storagenode
-	#chown -R $DAEMON_USER:$DAEMON_USER $identitydir
     ;;
 
-    abort-upgrade|abort-remove|abort-deconfigure)
+    abort-deconfigure)
     ;;
 
     *)
