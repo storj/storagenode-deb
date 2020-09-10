@@ -60,10 +60,44 @@ Description: Do you want to continue?
 
 Template: storagenode/wallet
 Type: string
-Default:
+Default: 0x
 Description: Storj payout address (ERC20-compatible)
  This payout address will receive the STORJ token payouts
  for running the storage node.
+
+Template: storagenode/wallet/empty_wallet_continue
+Type: boolean
+Default: false
+Description: Do you want to continue? 
+ The payout address cannot be empty. 
+ You will not be able to connect without a valid wallet
+ address.
+
+Template: storagenode/wallet/wrong_prefix_continue
+Type: boolean
+Default: false
+Description: Do you want to continue?
+ The payout address must start with the '0x' prefix.
+ You will not be able to connect without a valid wallet
+ address.
+
+Template: storagenode/wallet/incorrect_char_continue
+Type: boolean
+Default: false
+Description: Do you want to continue?
+ The payout address should only contain alphanumeric characters
+ after the '0x' prefix.
+ You will not be able to connect without a valid wallet
+ address.
+
+Template: storagenode/wallet/wrong_nb_char_continue
+Type: boolean
+Default: false
+Description: Do you want to continue?
+ The payout address should contain exactly 40 alphanumeric characters
+ after the '0x' prefix.
+ You will not be able to connect without a valid wallet
+ address.
 
 Template: storagenode/email
 Type: string
@@ -71,6 +105,12 @@ Default:
 Description: Operator information - email address
  We will notify you on this email address when a new version
  has been released.
+
+Template: storagenode/email/wrong_format_continue
+Type: boolean
+Default: false
+Description: Do you want to continue?
+ The email address you have provided is not correct.
 
 Template: storagenode/external_addr
 Type: string
@@ -81,6 +121,13 @@ Description: External address/port (<ip>:<port>)
  When ready, enter the external IP address or the DDNS you configured and the port
  you opened on your router.
  Learn how to set up port forwarding: https://documentation.storj.io/dependencies/port-forwarding
+
+Template: storagenode/external_addr/not_ip_port_continue
+Type: boolean
+Default: false
+Description: Do you want to continue?
+ You did not specify a valid external <ip>:<port>.
+ You will not be able to connect without a valid external address.
 
 Template: storagenode/storage
 Type: string
