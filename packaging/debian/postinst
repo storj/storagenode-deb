@@ -59,12 +59,6 @@ case "$1" in
 	storagedir="$RET"
 	db_get storagenode/diskspace
 	diskspace="$RET"
-	echo "Identity directory === $identitydir"
-	echo "Wallet address === $wallet"
-	echo "Email === $email"
-	echo "External address === $external_addr"
-	echo "Storage directory === $storagedir"
-	echo "Disk space === $diskspace"
 
 	for binary in "storagenode" "storagenode-updater"; do
 	    if [ ! -f "/var/lib/storagenode/${binary}" ]; then
@@ -76,13 +70,6 @@ case "$1" in
 		    ln -s /var/lib/storagenode/${binary} /usr/bin/${binary}
 	    fi
 	done
-
-	# TODO: handle storage dir change during reconfigure
-	if [ -n "$old_storagedir" ] && [ "$storagedir" != "$old_storagedir" ]; then
-	    echo "New storage directory: ${storagedir} (was ${old_storagedir})"
-	else
-	    echo "Storage directory: ${storagedir}"
-	fi
 
 	# copy identity
 	if [ ! -f "/etc/storagenode/identity/identity.cert" ]; then
