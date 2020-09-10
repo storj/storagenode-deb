@@ -20,7 +20,17 @@ set -e
 
 
 case "$1" in
-    purge|remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
+    remove|upgrade|abort-install)
+	for binary in "storagenode" "storagenode-updater"; do
+	    rm -f /usr/bin/${binary}
+	    rm -f /var/lib/storagenode/${binary}
+	done
+	;;
+    purge)
+	rm -f /etc/storagenode/identity/identity.cert
+	rm -f /etc/storagenode/identity/identity.key
+	;;
+    failed-upgrade|abort-upgrade|disappear)
     ;;
 
     *)

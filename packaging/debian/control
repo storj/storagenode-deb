@@ -2,14 +2,14 @@ Source: storagenode
 Section: unknown
 Priority: optional
 Maintainer: Storj <storj@storj.io>
-Build-Depends: debhelper (>= 10)
+Build-Depends: debhelper (>= 12)
 Standards-Version: 4.1.2
 Homepage: <insert the upstream URL, if relevant>
 #Vcs-Git: https://anonscm.debian.org/git/collab-maint/storagenode.git
 #Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/storagenode.git
 
 Package: storagenode
-Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, wget, unzip
 Description: <insert up to 60 chars description>
  <insert long description, indented with spaces>

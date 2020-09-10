@@ -19,10 +19,6 @@ set -e
 
 case "$1" in
     remove|upgrade)
-	for binary in "storagenode" "storagenode-updater"; do
-	    rm -f /usr/bin/${binary}
-	    rm -f /var/storagenode/${binary}
-	done
     ;;
     
     deconfigure)

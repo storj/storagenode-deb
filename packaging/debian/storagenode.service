@@ -15,13 +15,13 @@ Description  = Storage Node service
 After        = syslog.target
 
 [Service]
+Type         = simple
 User         = storj-storagenode
 Group        = storj-storagenode
-ExecStart    = /var/storagenode/storagenode run --config-dir "/etc/storagenode"
+ExecStart    = /var/lib/storagenode/storagenode run --config-dir "/etc/storagenode"
 Restart      = on-failure
-Type         = simple
 NotifyAccess = main
 
 [Install]
-Alias	= storagenode
+Alias        = storagenode
 WantedBy     = multi-user.target
