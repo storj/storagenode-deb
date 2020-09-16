@@ -18,14 +18,15 @@ stage('Build Package') {
 		}
 }
 		// TODO
-		/*stage('Test Package') {
-			agent {
-				dockerfile {}
-			}
-			steps {
-				unstash 'deb-package'
-			}
-		}*/
+stage('Build binaries') {
+	    node {
+	    	 def binaryBuilder = docker.build("storj-ci", "--pull  https://github.com/storj/ci.git")
+		 binaryBuilder.inside {
+		       sh 'ls'
+		       sh 'make storagenode_amd64'
+		 }
+	    }
+}
 		
 node {
 stage('Build Repository') {
@@ -47,7 +48,7 @@ stage('Test Repository') {
 
 		def apt_repository = docker.build("apt-nginx", "-f ./apt-repository/nginx/Dockerfile .")
 		def debian_buster_client = docker.build("debian-client", "-f ./docker/Dockerfile.debian-buster .")
-
+		
 		withDockerNetwork{ n ->
 			apt_repository.withRun("--network ${n} --name apt-repository") { c ->
 				debian_buster_client.inside("--network ${n} -u root:root") {
