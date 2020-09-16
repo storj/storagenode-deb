@@ -10,6 +10,7 @@ def withDockerNetwork(Closure inner) {
 }
 stage('Build Package') {
 	node {
+	     checkout scm
 		def builderImage = docker.build("builder-image", "-f docker/Dockerfile.builder .")
 		builderImage.inside {
 			sh 'cd packaging && dpkg-buildpackage -us -uc -b'
