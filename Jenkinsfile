@@ -41,7 +41,7 @@ stage('Build binaries') {
 	    }
 	    sh 'ls ./release'
 	    def binaries_server = docker.image('nginx:latest')
-	    def debian_buster_client = docker.build("debian-client", "-f ./docker/Dockerfile.debian-buster .")
+	    def debian_buster_client = docker.image('debian:buster')
 	    withDockerNetwork{ n ->
 		binaries_server.withRun("--network ${n} --name apt-repository") { c ->
 		    debian_buster_client.inside("--network ${n} -u root:root") {
