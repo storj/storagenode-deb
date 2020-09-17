@@ -22,6 +22,9 @@ stage('Build Package') {
 stage('Build binaries') {
     node {
 	try {
+	    docker.image('storjlabs/golang:1.15.1').inside("-u root:root") {
+		rm -rf release
+	    }
 	    checkout([$class: 'GitSCM', 
   		      branches: [[name: '*/master']], 
     		      doGenerateSubmoduleConfigurations: false, 
@@ -35,7 +38,6 @@ stage('Build binaries') {
 		sh './scripts/release.sh build -o release/storagenode storj.io/storj/cmd/storagenode-updater'
 		sh 'ls ./release'
 		stash includes: 'release/storagenode*', name: 'storagenode-binaries'
-		sh 'rm -rf release'
 	    }
 	}
 	catch(err) {
