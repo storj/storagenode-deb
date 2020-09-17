@@ -31,7 +31,7 @@ stage('Build binaries') {
 docker.image('storjlabs/golang:1.15.1').inside("-u root:root") {
 
 		       sh 'ls'
-		       sh './scripts/release.sh'
+		       sh './scripts/release.sh build -o release/storagenode storj.io/storj/cmd/storagenode'
 		       sh 'ls ./release'
 		 }
 	    }
