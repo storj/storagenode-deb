@@ -21,18 +21,26 @@ stage('Build Package') {
 // TODO
 stage('Build binaries') {
     node {
-	checkout([$class: 'GitSCM', 
-  		  branches: [[name: '*/master']], 
-    		  doGenerateSubmoduleConfigurations: false, 
-    		  extensions: [], 
-    		  submoduleCfg: [], 
-    		  userRemoteConfigs: [[ url: 'https://github.com/storj/storj' ]]
-	])
-	docker.image('storjlabs/golang:1.15.1').inside("-u root:root") {
-	    
-	    sh 'ls ./release'
-	    sh './scripts/release.sh build -o release/storagenode storj.io/storj/cmd/storagenode'
-	    sh 'ls ./release'
+	try {
+	    checkout([$class: 'GitSCM', 
+  		      branches: [[name: '*/master']], 
+    		      doGenerateSubmoduleConfigurations: false, 
+    		      extensions: [], 
+    		      submoduleCfg: [], 
+    		      userRemoteConfigs: [[ url: 'https://github.com/storj/storj' ]]
+	    ])
+	    docker.image('storjlabs/golang:1.15.1').inside("-u root:root") {
+		
+		sh 'ls ./release/*'
+		sh './scripts/release.sh build -o release/storagenode storj.io/storj/cmd/storagenode'
+		sh 'ls ./release'
+	    }
+	}
+	catch(err) {
+	    throw err
+	}
+	finally {
+	    deleteDir()
 	}
     }
 }
