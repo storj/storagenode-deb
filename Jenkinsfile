@@ -30,10 +30,8 @@ stage('Build binaries') {
     		      userRemoteConfigs: [[ url: 'https://github.com/storj/storj' ]]
 	    ])
 	    docker.image('storjlabs/golang:1.15.1').inside("-u root:root") {
-		
-		sh 'ls ./release/*/'
-		sh './scripts/release.sh build -o release/storagenode storj.io/storj/cmd/storagenode'
-		sh 'ls ./release'
+
+		sh 'ls'
 		sh './scripts/release.sh build -o release/storagenode storj.io/storj/cmd/storagenode'
 		sh 'ls ./release'
 	    }
