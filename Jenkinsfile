@@ -22,6 +22,13 @@ stage('Build Package') {
 stage('Build binaries') {
 	    node {
 	    	 def binaryBuilder = docker.build("storj-ci", "--pull  https://github.com/storj/ci.git")
+		 checkout([$class: 'GitSCM', 
+  		   branches: [[name: '*/master']], 
+    		   doGenerateSubmoduleConfigurations: false, 
+    		   extensions: [], 
+    		   submoduleCfg: [], 
+    		   userRemoteConfigs: [[ url: 'https://github.com/storj/storj' ]]
+])
 		 binaryBuilder.inside {
 		       sh 'ls'
 		       sh 'make storagenode_amd64'
