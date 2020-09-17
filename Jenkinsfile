@@ -42,7 +42,7 @@ stage('Build binaries') {
 	    throw err
 	}
 	finally {
-	    deleteDir()
+	    //deleteDir()
 	}
     }
 }
