@@ -32,6 +32,7 @@ stage('Build binaries') {
 ])
 
 		       sh 'ls'
+		       sh 'whoami'
 		       sh 'make binaries'
 		 }
 	    }
