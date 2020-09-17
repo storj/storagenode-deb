@@ -20,7 +20,7 @@ stage('Build Package') {
 }
 		// TODO
 stage('Build binaries') {
-	    node('node') {
+	    node {
 	    	 def binaryBuilder = docker.build("storj-ci", "--pull  https://github.com/storj/ci.git")
 		 binaryBuilder.inside("-u root:root") {
 		 		      		 checkout([$class: 'GitSCM', 
