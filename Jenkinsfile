@@ -23,7 +23,7 @@ stage('Build binaries') {
     node {
 	try {
 	    docker.image('storjlabs/golang:1.15.1').inside("-u root:root") {
-		rm -rf release
+		sh 'rm -rf release'
 	    }
 	    checkout([$class: 'GitSCM', 
   		      branches: [[name: '*/master']], 
