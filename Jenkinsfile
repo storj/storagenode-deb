@@ -33,6 +33,7 @@ stage('Build binaries') {
 
 		sh 'ls'
 		sh './scripts/release.sh build -o release/storagenode storj.io/storj/cmd/storagenode'
+		sh './scripts/release.sh build -o release/storagenode storj.io/storj/cmd/storagenode-updater'
 		sh 'ls ./release'
 	    }
 	}
@@ -40,6 +41,7 @@ stage('Build binaries') {
 	    throw err
 	}
 	finally {
+	    sh 'rm -rf release'
 	    deleteDir()
 	}
     }
