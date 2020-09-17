@@ -21,8 +21,8 @@ stage('Build Package') {
 		// TODO
 stage('Build binaries') {
 	    node {
-	    	 def binaryBuilder = docker.build("storj-ci", "--pull  https://github.com/storj/ci.git")
-		 binaryBuilder.WithRun("-u $(id -u):$(id -g)").inside {
+//	    	 def binaryBuilder = docker.build("storj-ci", "--pull  https://github.com/storj/ci.git")
+//		 binaryBuilder.WithRun().inside {
 		 		      		 checkout([$class: 'GitSCM', 
   		   branches: [[name: '*/master']], 
     		   doGenerateSubmoduleConfigurations: false, 
@@ -34,7 +34,7 @@ stage('Build binaries') {
 		       sh 'ls'
 		       sh 'whoami'
 		       sh 'make binaries'
-		 }
+//		 }
 	    }
 }
 		
