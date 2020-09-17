@@ -23,7 +23,6 @@ stage('Build binaries') {
     node {
 	try {
 	    docker.image('storjlabs/golang:1.15.1').inside("-u root:root") {
-		sh 'rm -rf release'
 	    }
 	    checkout([$class: 'GitSCM', 
   		      branches: [[name: '*/master']], 
@@ -35,16 +34,28 @@ stage('Build binaries') {
 	    docker.image('storjlabs/golang:1.15.1').inside("-u root:root") {
 		sh 'ls'
 		sh './scripts/release.sh build -o release/storagenode storj.io/storj/cmd/storagenode'
-		sh './scripts/release.sh build -o release/storagenode storj.io/storj/cmd/storagenode-updater'
+		sh './scripts/release.sh build -o release/storagenode-updater storj.io/storj/cmd/storagenode-updater'
 		sh 'ls ./release'
 		stash includes: 'release/storagenode*', name: 'storagenode-binaries'
+		//sh 'rm -rf release'
+	    }
+	    sh 'ls ./release'
+	    def binaries_server = docker.image('nginx:latest')
+	    def debian_buster_client = docker.build("debian-client", "-f ./docker/Dockerfile.debian-buster .")
+	    withDockerNetwork{ n ->
+		binaries_server.withRun("--network ${n} --name apt-repository") { c ->
+		    debian_buster_client.inside("--network ${n} -u root:root") {
+			sh "echo 'Hello'"
+		    }
+		}
 	    }
 	}
+	
 	catch(err) {
 	    throw err
 	}
 	finally {
-	    //deleteDir()
+	    deleteDir()
 	}
     }
 }
