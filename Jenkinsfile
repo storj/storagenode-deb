@@ -32,7 +32,7 @@ stage('Build binaries') {
 ])
 
 		       sh 'ls'
-		       sh 'make storagenode_amd64'
+		       sh 'make binaries'
 		 }
 	    }
 }
