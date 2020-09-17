@@ -30,18 +30,18 @@ stage('Build binaries') {
     		      userRemoteConfigs: [[ url: 'https://github.com/storj/storj' ]]
 	    ])
 	    docker.image('storjlabs/golang:1.15.1').inside("-u root:root") {
-
 		sh 'ls'
 		sh './scripts/release.sh build -o release/storagenode storj.io/storj/cmd/storagenode'
 		sh './scripts/release.sh build -o release/storagenode storj.io/storj/cmd/storagenode-updater'
 		sh 'ls ./release'
+		stash includes: 'release/storagenode*', name: 'storagenode-binaries'
+		sh 'rm -rf release'
 	    }
 	}
 	catch(err) {
 	    throw err
 	}
 	finally {
-	    sh 'rm -rf release'
 	    deleteDir()
 	}
     }
