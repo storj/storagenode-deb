@@ -33,7 +33,7 @@ stage('Build binaries') {
 
 		       sh 'ls'
 		       sh 'whoami'
-		       sh 'make storagenode_amd64'
+		       sh 'go build storj.io/storj/cmd/storagenode'
 		 }
 	    }
 }
