@@ -32,8 +32,7 @@ stage('Build binaries') {
 ])
 
 		       sh 'ls'
-		       sh 'whoami'
-		       sh 'go build storj.io/storj/cmd/storagenode'
+		       sh 'find / -name "storagenode*_amd64"'	       
 		 }
 	    }
 }
