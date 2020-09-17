@@ -21,8 +21,6 @@ stage('Build Package') {
 		// TODO
 stage('Build binaries') {
 	    node {
-	    	 def binaryBuilder = docker.build("storj-ci", "--pull  https://github.com/storj/ci.git")
-		 binaryBuilder.inside("-u root:root") {
 		 		      		 checkout([$class: 'GitSCM', 
   		   branches: [[name: '*/master']], 
     		   doGenerateSubmoduleConfigurations: false, 
@@ -30,9 +28,11 @@ stage('Build binaries') {
     		   submoduleCfg: [], 
     		   userRemoteConfigs: [[ url: 'https://github.com/storj/storj' ]]
 ])
+docker.image('storjlabs/golang:1.15.1').inside("-u root:root") {
 
 		       sh 'ls'
-		       sh 'find / -name "storagenode*_amd64"'	       
+		       sh './scripts/release.sh'
+		       sh 'ls ./release'
 		 }
 	    }
 }
