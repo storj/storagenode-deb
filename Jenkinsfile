@@ -23,19 +23,25 @@ node {
 	
 	stage('Build binaries') {
 	    docker.image('storjlabs/golang:1.15.1').inside("-u root:root") {
-		checkout([$class: 'GitSCM', 
-  			  branches: [[name: '*/master']], 
-    			  doGenerateSubmoduleConfigurations: false, 
-    			  extensions: [], 
-    			  submoduleCfg: [], 
-    			  userRemoteConfigs: [[ url: 'https://github.com/storj/storj' ]]
-		])
-		sh './scripts/release.sh build -o release/storagenode storj.io/storj/cmd/storagenode'
-		sh './scripts/release.sh build -o release/storagenode-updater storj.io/storj/cmd/storagenode-updater'
-		sh 'ls ./release'
-		stash includes: 'release/storagenode*', name: 'storagenode-binaries'
-		//sh 'rm -rf release'
-		
+		try {
+		    checkout([$class: 'GitSCM', 
+  			      branches: [[name: '*/master']], 
+    			      doGenerateSubmoduleConfigurations: false, 
+    			      extensions: [], 
+    			      submoduleCfg: [], 
+    			      userRemoteConfigs: [[ url: 'https://github.com/storj/storj' ]]
+		    ])
+		    sh './scripts/release.sh build -o release/storagenode storj.io/storj/cmd/storagenode'
+		    sh './scripts/release.sh build -o release/storagenode-updater storj.io/storj/cmd/storagenode-updater'
+		    sh 'ls ./release'
+		    stash includes: 'release/storagenode*', name: 'storagenode-binaries'
+		}
+		catch(err) {
+		    throw err
+		}
+		finally {
+		    sh "rm -rf release"
+		}
 		
 	    }
 	    def binaries_server = docker.image('nginx:latest')
@@ -50,7 +56,7 @@ node {
 	}	
 	
 	stage('Build Repository') {
-	    checkout scm
+	    
 	    def repoBuilderImage = docker.build("repo-builder", "-f ./apt-repository/Dockerfile.reprepro .")
 	    repoBuilderImage.inside() {
 		sh 'git clean -fdx'
@@ -87,6 +93,5 @@ node {
 	sh "chmod -R 777 ." // ensure Jenkins agent can delete the working directory
 	deleteDir()
     }
-
 }
 
