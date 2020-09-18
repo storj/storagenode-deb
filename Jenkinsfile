@@ -8,8 +8,9 @@ def withDockerNetwork(Closure inner) {
         sh "docker network rm ${networkId}"
     }
 }
-stage('Build Package') {
-    node {
+node {
+    stage('Build Package') {
+	
 	checkout scm
 	def builderImage = docker.build("builder-image", "-f docker/Dockerfile.builder .")
 	builderImage.inside {
@@ -17,10 +18,8 @@ stage('Build Package') {
 	    stash includes: '*.deb', name: 'deb-package'
 	}
     }
-}
-// TODO
-stage('Build binaries') {
-    node {
+
+    stage('Build binaries') {
 	docker.image('storjlabs/golang:1.15.1').inside("-u root:root") {
 	    try {
 		checkout([$class: 'GitSCM', 
@@ -54,11 +53,9 @@ stage('Build binaries') {
 		}
 	    }
 	}
-	
-    }
-}
+    }	
 
-node {
+
     stage('Build Repository') {
 	
 	def repoBuilderImage = docker.build("repo-builder", "-f ./apt-repository/Dockerfile.reprepro .")
@@ -90,3 +87,4 @@ node {
 	}
     }
 }
+
