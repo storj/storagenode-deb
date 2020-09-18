@@ -25,15 +25,15 @@ stage('Build binaries') {
 	    sh 'rm -rf ./release'
 	}
 	
-	checkout([$class: 'GitSCM', 
-  		  branches: [[name: '*/master']], 
-    		  doGenerateSubmoduleConfigurations: false, 
-    		  extensions: [], 
-    		  submoduleCfg: [], 
-    		  userRemoteConfigs: [[ url: 'https://github.com/storj/storj' ]]
-	])
 	docker.image('storjlabs/golang:1.15.1').inside("-u root:root") {
 	    try {
+		checkout([$class: 'GitSCM', 
+  			  branches: [[name: '*/master']], 
+    			  doGenerateSubmoduleConfigurations: false, 
+    			  extensions: [], 
+    			  submoduleCfg: [], 
+    			  userRemoteConfigs: [[ url: 'https://github.com/storj/storj' ]]
+		])
 		sh 'ls'
 		sh './scripts/release.sh build -o release/storagenode storj.io/storj/cmd/storagenode'
 		sh './scripts/release.sh build -o release/storagenode-updater storj.io/storj/cmd/storagenode-updater'
