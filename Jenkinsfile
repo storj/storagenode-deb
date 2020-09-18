@@ -56,7 +56,7 @@ node {
 	}	
 	
 	stage('Build Repository') {
-	    
+	    checkout scm
 	    def repoBuilderImage = docker.build("repo-builder", "-f ./apt-repository/Dockerfile.reprepro .")
 	    repoBuilderImage.inside() {
 		sh 'git clean -fdx'
