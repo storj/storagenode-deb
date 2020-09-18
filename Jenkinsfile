@@ -21,18 +21,19 @@ stage('Build Package') {
 // TODO
 stage('Build binaries') {
     node {
-	try {
-	    docker.image('storjlabs/golang:1.15.1').inside("-u root:root") {
-		sh 'rm -rf ./release'
-	    }
-	    checkout([$class: 'GitSCM', 
-  		      branches: [[name: '*/master']], 
-    		      doGenerateSubmoduleConfigurations: false, 
-    		      extensions: [], 
-    		      submoduleCfg: [], 
-    		      userRemoteConfigs: [[ url: 'https://github.com/storj/storj' ]]
-	    ])
-	    docker.image('storjlabs/golang:1.15.1').inside("-u root:root") {
+	docker.image('storjlabs/golang:1.15.1').inside("-u root:root") {
+	    sh 'rm -rf ./release'
+	}
+	
+	checkout([$class: 'GitSCM', 
+  		  branches: [[name: '*/master']], 
+    		  doGenerateSubmoduleConfigurations: false, 
+    		  extensions: [], 
+    		  submoduleCfg: [], 
+    		  userRemoteConfigs: [[ url: 'https://github.com/storj/storj' ]]
+	])
+	docker.image('storjlabs/golang:1.15.1').inside("-u root:root") {
+	    try {
 		sh 'ls'
 		sh './scripts/release.sh build -o release/storagenode storj.io/storj/cmd/storagenode'
 		sh './scripts/release.sh build -o release/storagenode-updater storj.io/storj/cmd/storagenode-updater'
@@ -40,6 +41,13 @@ stage('Build binaries') {
 		stash includes: 'release/storagenode*', name: 'storagenode-binaries'
 		//sh 'rm -rf release'
 	    }
+	    catch(err) {
+		throw err
+	    }
+	    finally {
+		deleteDir()
+	    }
+	    
 	    sh 'ls ./release'
 	    def binaries_server = docker.image('nginx:latest')
 	    def debian_buster_client = docker.image('debian:buster')
@@ -52,12 +60,6 @@ stage('Build binaries') {
 	    }
 	}
 	
-	catch(err) {
-	    throw err
-	}
-	finally {
-	    deleteDir()
-	}
     }
 }
 
