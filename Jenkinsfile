@@ -43,19 +43,19 @@ node {
 		deleteDir()
 	    }
 	    
-	    def binaries_server = docker.image('nginx:latest')
-	    def debian_buster_client = docker.image('debian:buster')
-	    withDockerNetwork{ n ->
-		binaries_server.withRun("--network ${n} --name binaries-server") { c ->
-		    debian_buster_client.inside("--network ${n} -u root:root") {
-			sh "echo 'Hello'"
-		    }
+
+	}
+	def binaries_server = docker.image('nginx:latest')
+	def debian_buster_client = docker.image('debian:buster')
+	withDockerNetwork{ n ->
+	    binaries_server.withRun("--network ${n} --name binaries-server") { c ->
+		debian_buster_client.inside("--network ${n} -u root:root") {
+		    sh "echo 'Hello'"
 		}
 	    }
 	}
     }	
-
-
+    
     stage('Build Repository') {
 	
 	def repoBuilderImage = docker.build("repo-builder", "-f ./apt-repository/Dockerfile.reprepro .")
