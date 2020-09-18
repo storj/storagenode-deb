@@ -22,10 +22,6 @@ stage('Build Package') {
 stage('Build binaries') {
     node {
 	docker.image('storjlabs/golang:1.15.1').inside("-u root:root") {
-	    sh 'rm -rf ./release'
-	}
-	
-	docker.image('storjlabs/golang:1.15.1').inside("-u root:root") {
 	    try {
 		checkout([$class: 'GitSCM', 
   			  branches: [[name: '*/master']], 
@@ -34,7 +30,6 @@ stage('Build binaries') {
     			  submoduleCfg: [], 
     			  userRemoteConfigs: [[ url: 'https://github.com/storj/storj' ]]
 		])
-		sh 'ls'
 		sh './scripts/release.sh build -o release/storagenode storj.io/storj/cmd/storagenode'
 		sh './scripts/release.sh build -o release/storagenode-updater storj.io/storj/cmd/storagenode-updater'
 		sh 'ls ./release'
@@ -45,14 +40,14 @@ stage('Build binaries') {
 		throw err
 	    }
 	    finally {
+		sh "chmod -R 777 ." // ensure Jenkins agent can delete the working directory
 		deleteDir()
 	    }
 	    
-	    sh 'ls ./release'
 	    def binaries_server = docker.image('nginx:latest')
 	    def debian_buster_client = docker.image('debian:buster')
 	    withDockerNetwork{ n ->
-		binaries_server.withRun("--network ${n} --name apt-repository") { c ->
+		binaries_server.withRun("--network ${n} --name binaries-server") { c ->
 		    debian_buster_client.inside("--network ${n} -u root:root") {
 			sh "echo 'Hello'"
 		    }
