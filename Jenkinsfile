@@ -40,6 +40,7 @@ node {
 		    throw err
 		}
 		finally {
+		    sh 'git clean -fdx'
 		    sh "rm -rf release"
 		}
 		
