@@ -49,8 +49,12 @@ node {
 	    def debian_buster_client = docker.image('debian:buster')
 	    withDockerNetwork{ n ->
 		binaries_server.withRun("--network ${n} --name binaries-server") { c ->
+		    unstash 'storagenode-binaries'
+		    sh 'cp mv release/storagenode* /usr/share/nginx/html'
 		    debian_buster_client.inside("--network ${n} -u root:root") {
 			sh "echo 'Hello'"
+			sh 'apt-get install -y wget'
+			sh 'wget http://binaries-server'
 		    }
 		}
 	    }
