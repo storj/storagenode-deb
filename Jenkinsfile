@@ -51,7 +51,7 @@ node {
 	    withDockerNetwork{ n ->
 		binaries_server.withRun("--network ${n} --name binaries-server -v ${pwd}/release:/usr/share/nginx/html:ro") { c ->
 		    sh "ls"
-		    sh "ls /usr/share/nginx"
+		    sh "ls /usr/share/nginx/html"
 //		    sh 'mv release/storagenode* /usr/share/nginx/html/'
 		    debian_buster_client.inside("--network ${n} -u root:root") {
 			sh "echo 'Hello'"
