@@ -60,7 +60,7 @@ node {
 		    debian_buster_client.inside("--network ${n} -u root:root") {
 			sh "apt-get update"
 			sh 'apt-get install -y wget'
-			sh 'wget http://binaries-server'
+	//		sh 'wget http://binaries-server'
 			sh 'wget http://binaries-server/release/storagenode-updater'
 		    }
 		}
