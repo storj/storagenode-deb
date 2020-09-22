@@ -52,11 +52,13 @@ node {
 		binaries_server.withRun("--network ${n} -p 8080:80 --name binaries-server -v ${pwd}/release/:/usr/share/nginx/html:ro") { c ->
 		    //sh "ls"
 		    //sh "ls /usr/share/nginx/html"
+		    sh 'echo ${pwd}'
 //		    sh 'mv release/storagenode* /usr/share/nginx/html/'
 		    debian_buster_client.inside("--network ${n} -u root:root") {
 			sh "apt-get update"
 			sh 'apt-get install -y wget'
 			sh 'wget http://binaries-server:8080'
+			sh 'wget http://binaries-server:80'
 		    }
 		}
 	    }
