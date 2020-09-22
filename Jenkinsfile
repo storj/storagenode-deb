@@ -33,7 +33,7 @@ node {
 		    ])
 		    sh './scripts/release.sh build -o release/storagenode storj.io/storj/cmd/storagenode'
 		    sh './scripts/release.sh build -o release/storagenode-updater storj.io/storj/cmd/storagenode-updater'
-		    sh 'ls ./release'
+		    sh 'ls'
 		    stash includes: 'release/storagenode*', name: 'storagenode-binaries'
 		}
 		catch(err) {
