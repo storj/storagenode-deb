@@ -49,8 +49,9 @@ node {
 	    sh 'ls'
 	    def binaries_server = docker.build("binaries-s", "-f ./docker/Dockerfile.binaries .")
 	    def debian_buster_client = docker.image('debian:buster')
-	    withDockerNetwork{ n ->
 		checkout scm
+
+	    withDockerNetwork{ n ->
 
 		binaries_server.withRun("--network ${n} --name binaries-server") { c ->
 		    //sh "ls"
