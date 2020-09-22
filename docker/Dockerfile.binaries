@@ -1,5 +1,4 @@
 FROM nginx:latest
 # maybe we should set version
-RUN "ls ./release"
 COPY ./release /usr/share/nginx/html
 RUN "ls /usr/share/nginx/html"
