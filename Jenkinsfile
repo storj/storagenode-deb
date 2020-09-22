@@ -46,7 +46,7 @@ node {
 		
 	    }
 	    unstash 'storagenode-binaries'
-	    def binaries_server = docker.build("binaries", "f ./docker/Dockerfile.binaries .")
+	    def binaries_server = docker.build("binaries", "-f ./docker/Dockerfile.binaries .")
 	    def debian_buster_client = docker.image('debian:buster')
 	    withDockerNetwork{ n ->
 		binaries_server.withRun("--network ${n} --name binaries-server") { c ->
