@@ -49,6 +49,8 @@ node {
 	    def binaries_server = docker.build("binaries", "-f ./docker/Dockerfile.binaries .")
 	    def debian_buster_client = docker.image('debian:buster')
 	    withDockerNetwork{ n ->
+		checkout scm
+
 		binaries_server.withRun("--network ${n} --name binaries-server") { c ->
 		    //sh "ls"
 		    //sh "ls /usr/share/nginx/html"
