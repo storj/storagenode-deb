@@ -47,7 +47,7 @@ node {
 	    }
 	    unstash 'storagenode-binaries'
 	    checkout scm
-	    sh 'ls'
+	    sh 'ls .release'
 	    def binaries_server = docker.build("binaries-s", "-f ./docker/Dockerfile.binaries .")
 	    def debian_buster_client = docker.image('debian:buster')
 	    withDockerNetwork{ n ->
