@@ -47,12 +47,12 @@ node {
 	    }
 	    def binaries_server = docker.image('nginx:latest')
 	    def debian_buster_client = docker.image('debian:buster')
+	    unstash 'storagenode-binaries'
 	    withDockerNetwork{ n ->
-		binaries_server.withRun("--network ${n} --name binaries-server") { c ->
-		    unstash 'storagenode-binaries'
+		binaries_server.withRun("--network ${n} --name binaries-server -v ./release:/usr/share/nginx/html:ro") { c ->
 		    sh "ls"
-		    sh "/usr/share/nginx"
-		    sh 'mv release/storagenode* /usr/share/nginx/html/'
+		    sh "ls /usr/share/nginx"
+//		    sh 'mv release/storagenode* /usr/share/nginx/html/'
 		    debian_buster_client.inside("--network ${n} -u root:root") {
 			sh "echo 'Hello'"
 			sh 'apt-get install -y wget'
