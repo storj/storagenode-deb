@@ -13,6 +13,8 @@
 [Unit]
 Description  = Storage Node service
 After        = syslog.target
+After        = network-online.target
+Wants        = network-online.target
 
 [Service]
 Type         = simple
