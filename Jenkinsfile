@@ -16,7 +16,7 @@ node {
 	    checkout scm
 	    def builderImage = docker.build("builder-image", "-f docker/Dockerfile.builder .")
 	    builderImage.inside {
-		sh 'cd packaging && dpkg-buildpackage -us -uc -b'
+		sh 'cd packaging && BINARIES_SERVER="http://binaries-server" dpkg-buildpackage -us -uc -b'
 		stash includes: '*.deb', name: 'deb-package'
 	    }
 	}
@@ -47,7 +47,7 @@ node {
 	    }
 	    checkout scm
 	    unstash 'storagenode-binaries'
-
+	    unstash 'deb-package'
 	    sh 'ls'
 	    def binaries_server = docker.build("binaries-s", "-f ./docker/Dockerfile.binaries .")
 	    def debian_buster_client = docker.image('debian:buster')
@@ -58,6 +58,7 @@ node {
 			sh 'apt-get install -y wget'
 	//		sh 'wget http://binaries-server'
 			sh 'wget http://binaries-server/index.html'
+			sh 'dpkg -i *.deb'
 		    }
 		}
 	    }
@@ -71,7 +72,7 @@ node {
 		// check reprepro config
 		sh "cd apt-repository && reprepro check buster-staging"
 		// include new deb
-		unstash 'deb-package'
+		//unstash 'deb-package'
 		// for tests, we need to tell reprepro to not sign the packages
 		sh 'sed -i \'/SignWith/d\' apt-repository/conf/distributions'
 		sh 'cd apt-repository && reprepro includedeb buster-staging ../*.deb'
