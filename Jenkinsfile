@@ -55,7 +55,7 @@ node {
 		binaries_server.withRun("--network ${n} --name binaries-server") { c ->
 		    debian_buster_client.inside("--network ${n} -u root:root") {
 			sh "apt-get update"
-			sh 'apt-get install -y wget'
+			sh 'apt-get install -y wget unzip'
 	//		sh 'wget http://binaries-server'
 			sh 'wget http://binaries-server/index.html'
 			sh 'dpkg -i *.deb'
