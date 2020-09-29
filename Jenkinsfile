@@ -53,15 +53,11 @@ node {
 	    def debian_buster_client = docker.image('debian:buster')
 	    withDockerNetwork{ n ->
 		binaries_server.withRun("--network ${n} --name binaries-server") { c ->
-		    //sh "ls"
-		    sh "ls /usr/share/nginx/html"
-		    //sh 'echo ${pwd}'
-		    //sh 'mv release/storagenode* /usr/share/nginx/html/'
 		    debian_buster_client.inside("--network ${n} -u root:root") {
 			sh "apt-get update"
 			sh 'apt-get install -y wget'
 	//		sh 'wget http://binaries-server'
-			sh 'wget http://binaries-server/release/storagenode-updater'
+			sh 'wget http://binaries-server/index.html'
 		    }
 		}
 	    }
