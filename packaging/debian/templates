@@ -156,8 +156,8 @@ Template: storagenode/diskspace/wrong_format
 Type: boolean
 Default: false
 Description: Do you want to continue?
- You did not specify an amount of space. Please specify a disk space
- using n{G,T} notation.
+ You did not specify an amount of space in Gb or Tb. Please specify a disk space
+ using the human readable format (n{G,T}) notation.
 
 Template: storagenode/diskspace/below_minimum
 Type: boolean
