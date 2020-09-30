@@ -29,7 +29,7 @@ stage('Build Package') {
 		
 node {
 stage('Build Repository') {
-	
+		checkout scm
 		def repoBuilderImage = docker.build("repo-builder", "-f ./apt-repository/Dockerfile.reprepro .")
 		repoBuilderImage.inside() {
 			sh 'git clean -fdx'
@@ -44,7 +44,7 @@ stage('Build Repository') {
 		}
 
 stage('Test Repository') {
-
+	checkout scm
 		def apt_repository = docker.build("apt-nginx", "-f ./apt-repository/nginx/Dockerfile .")
 		def debian_buster_client = docker.build("debian-client", "-f ./docker/Dockerfile.debian-buster .")
 
