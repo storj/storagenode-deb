@@ -163,7 +163,7 @@ Template: storagenode/diskspace/below_minimum
 Type: boolean
 Default: false
 Description: Do you want to continue?
- The required minimum amount of space is 500G.
+ The required minimum amount of space is 550G (500G advertised + 10% overhead).
 
 Template: storagenode/diskspace/below_specified
 Type: boolean
