@@ -129,12 +129,18 @@ Description: Do you want to continue?
  You did not specify a valid external <ip>:<port>.
  You will not be able to connect without a valid external address.
 
-Template: storagenode/storage
+Template: storagenode/storagedir
 Type: string
-Default:
-Description: Advertised storage
+Default: /var/lib/storagenode
+Description: Storage directory
  The storage node will store the uploaded data to this
  location. Select a volume with at least 500 GB of free space.
+
+Template: storagenode/storagedir/does_not_exist
+Type: boolean
+Default: false
+Description: Do you want to continue?
+ The storage location you've specified does not exist.
 
 Template: storagenode/diskspace
 Type: string
@@ -146,11 +152,22 @@ Description: Allocated disk space
  corrupt your database when the system attempts to store pieces when no
  more physical space is actually available on your drive.
 
-Template: storagenode/bandwidth
-Type: string
-Default:
-Description: Advertised bandwidth
- How much bandwidth you can allocate to the Storj network. Be sure to
- allow for other use cases you have for your internet connection, and
- do not allocate more than the total up and download bandwidth your
- ISP can physically supply. The minimum bandwidth requirement is 2 TB.
+Template: storagenode/diskspace/wrong_format
+Type: boolean
+Default: false
+Description: Do you want to continue?
+ You did not specify an amount of space in Gb or Tb. Please specify a disk space
+ using the human readable format (n{G,T}) notation.
+
+Template: storagenode/diskspace/below_minimum
+Type: boolean
+Default: false
+Description: Do you want to continue?
+ The required minimum amount of space is 550G (500G advertised + 10% overhead).
+
+Template: storagenode/diskspace/below_specified
+Type: boolean
+Default: false
+Description: Do you want to continue?
+ The amount of space is not available on the storage location
+ you've specified.
