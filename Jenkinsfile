@@ -42,7 +42,6 @@ debian_buster_client.inside("--network ${n} -u root:root") {
 					sh "apt-cache search storagenode"
 				}
 			}
->>>>>>> 65fbac16a0a1b29dd589a1d0dcb1ae3ce11bef2c
 		}
 		finally {
 		    sh 'git clean -fdx'
