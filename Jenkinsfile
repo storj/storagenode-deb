@@ -17,6 +17,22 @@ node {
 		}
 	}
 
+	stage('Build binaries') {
+		def binaries_server = docker.build("binaries-s", "-f ./docker/Dockerfile.binaries .")
+		def debian_buster_client = docker.image('debian:buster')
+		withDockerNetwork{ n ->
+			binaries_server.withRun("--network ${n} --name binaries-server") { c ->
+				debian_buster_client.inside("--network ${n} -u root:root") {
+					sh "apt-get update"
+					sh 'apt-get install -y wget unzip'
+	//				sh 'wget http://binaries-server'
+					sh 'wget http://binaries-server/index.html'
+					sh 'timeout 30s dpkg -i *.deb'
+				}
+			}
+		}
+	}
+
 		// TODO
 		/*stage('Test Package') {
 			agent {
