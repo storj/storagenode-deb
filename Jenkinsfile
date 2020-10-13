@@ -18,6 +18,32 @@ node {
 	}
 
 	stage('Build binaries') {
+	    docker.image('storjlabs/golang:1.15.1').inside("-u root:root") {
+			try {
+		    	checkout([$class: 'GitSCM',
+  					branches: [[name: '*/master']],
+    				doGenerateSubmoduleConfigurations: false,
+    				extensions: [],
+    			    submoduleCfg: [],
+    			    userRemoteConfigs: [[ url: 'https://github.com/storj/storj' ]]
+		    	])
+		    	sh './scripts/release.sh build -o release/storagenode storj.io/storj/cmd/storagenode'
+		    	sh './scripts/release.sh build -o release/storagenode-updater storj.io/storj/cmd/storagenode-updater'
+		    	sh 'ls'
+		    	stash includes: 'release/storagenode*', name: 'storagenode-binaries'
+			}
+			catch(err) {
+		    	throw err
+			}
+			finally {
+		    	sh 'git clean -fdx'
+		    	sh "rm -rf release"
+			}
+	    }
+	}
+	stage('Test Installation') {
+		checkout scm
+		unstash 'storagenode-binaries'
 		def binaries_server = docker.build("binaries-s", "-f ./docker/Dockerfile.binaries .")
 		def debian_buster_client = docker.image('debian:buster')
 		withDockerNetwork{ n ->
