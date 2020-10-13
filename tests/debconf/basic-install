@@ -1,21 +1,22 @@
-storagenode string storagenode/identitydir /home
-storagenode boolean storagenode/identitydir/directory_does_not_exist_continue true
-storagenode boolean storagenode/identitydir/empty_string_continue true
-storagenode boolean storagenode/identitydir/no_identity_cert_continue true
-storagenode boolean storagenode/identitydir/no_ca_cert_continue true
-storagenode boolean storagenode/identitydir/no_identity_key_continue true
-storagenode string storagenode/wallet 0x0123456789012345678901234567890123456789
-storagenode boolean storagenode/wallet/empty_wallet_continue true
-storagenode boolean storagenode/wallet/wrong_prefix_continue true
-storagenode boolean storagenode/wallet/incorrect_char_continue true
-storagenode boolean storagenode/wallet/wrong_nb_char_continue true
-storagenode string storagenode/email me@mymail.com
-storagenode boolean storagenode/email/wrong_format_continue true
-storagenode string storagenode/external_addr 123.123.122.123:1234
-storagenode boolean storagenode/external_addr/not_ip_port_continue true
-storagenode string storagenode/storagedir /var/lib/storagenode
-storagenode boolean storagenode/storagedir/does_not_exist
-storagenode string storagenode/diskspace
-storagenode boolean storagenode/diskspace/wrong_format
-storagenode boolean storagenode/diskspace/below_minimum
-storagenode boolean storagenode/diskspace/below_specified
+storagenode storagenode/identitydir string /home
+storagenode storagenode/identitydir/directory_does_not_exist_continue boolean true
+storagenode storagenode/identitydir/empty_string_continue boolean true
+storagenode storagenode/identitydir/no_identity_cert_continue boolean true
+storagenode storagenode/identitydir/no_ca_cert_continue boolean true
+storagenode storagenode/identitydir/no_identity_key_continue boolean true
+storagenode storagenode/wallet string 0x0123456789012345678901234567890123456789
+storagenode storagenode/wallet/empty_wallet_continue boolean true
+storagenode storagenode/wallet/wrong_prefix_continue boolean true
+storagenode storagenode/wallet/incorrect_char_continue boolean true
+storagenode storagenode/wallet/wrong_nb_char_continue boolean true
+storagenode storagenode/email string me@mymail.com
+storagenodestoragenode/email/wrong_format_continue boolean true
+storagenode storagenode/external_addr string 123.123.122.123:1234
+storagenode storagenode/external_addr/not_ip_port_continue boolean true
+storagenode storagenode/storagedir string /var/lib/storagenode
+storagenode storagenode/storagedir/does_not_exist boolean true
+storagenode storagenode/diskspace string 550G
+storagenode storagenode/diskspace/wrong_format boolean true
+storagenode storagenode/diskspace/below_minimum boolean true
+storagenode storagenode/diskspace/below_specified boolean true
+
