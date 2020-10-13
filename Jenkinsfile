@@ -55,7 +55,7 @@ node {
 	//				sh 'wget http://binaries-server'
 					sh 'wget http://binaries-server/index.html'
 					sh 'ls'
-					sh 'cat tests/debconf/basic-install | DEBIAN_FRONTEND=noninteractive dpkg -i *.deb'
+					sh(script: "/bin/bash -c 'cat tests/debconf/basic-install | DEBIAN_FRONTEND=noninteractive dpkg -i *.deb'")
 				}
 			}
 		}
