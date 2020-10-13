@@ -9,11 +9,6 @@ Description: Storj V3 Storage Node installation
   - You've configured port forwarding for your storage node
   Learn more: https://documentation.storj.io/setup/cli
 
-Template: storagenode/storagedir
-Type: string
-Default: /var/lib/storagenode
-Description: where data will be stored.
-
 Template: storagenode/identitydir
 Type: string
 Default: /home/

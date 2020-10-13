@@ -1,0 +1,21 @@
+string storagenode/identitydir /home
+boolean storagenode/identitydir/directory_does_not_exist_continue true
+boolean storagenode/identitydir/empty_string_continue true
+boolean storagenode/identitydir/no_identity_cert_continue true
+boolean storagenode/identitydir/no_ca_cert_continue true
+boolean storagenode/identitydir/no_identity_key_continue true
+string storagenode/wallet 0x0123456789012345678901234567890123456789
+boolean storagenode/wallet/empty_wallet_continue true
+boolean storagenode/wallet/wrong_prefix_continue true
+boolean storagenode/wallet/incorrect_char_continue true
+boolean storagenode/wallet/wrong_nb_char_continue true
+string storagenode/email me@mymail.com
+boolean storagenode/email/wrong_format_continue true
+string storagenode/external_addr 123.123.122.123:1234
+boolean storagenode/external_addr/not_ip_port_continue true
+string storagenode/storagedir /var/lib/storagenode
+boolean storagenode/storagedir/does_not_exist
+string storagenode/diskspace
+boolean storagenode/diskspace/wrong_format
+boolean storagenode/diskspace/below_minimum
+boolean storagenode/diskspace/below_specified
