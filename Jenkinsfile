@@ -12,7 +12,7 @@ node {
 	stage('Build Package') {
 		def builderImage = docker.build("builder-image", "-f docker/Dockerfile.builder .")
 		builderImage.inside {
-			sh 'cd packaging && dpkg-buildpackage -us -uc -b'
+			sh 'cd packaging && BINARIES_SERVER="http://binaries-server" dpkg-buildpackage -us -uc -b'
 			stash includes: '*.deb', name: 'deb-package'
 		}
 	}
@@ -43,6 +43,7 @@ node {
 	}
 	stage('Test Installation') {
 		checkout scm
+		unstash 'deb-package'
 		unstash 'storagenode-binaries'
 		def binaries_server = docker.build("binaries-s", "-f ./docker/Dockerfile.binaries .")
 		def debian_buster_client = docker.image('debian:buster')
@@ -57,6 +58,8 @@ node {
 				}
 			}
 		}
+
+		stash includes: '*.deb', name: 'deb-package'
 	}
 
 		// TODO
