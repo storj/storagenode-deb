@@ -54,7 +54,8 @@ node {
 					sh 'apt-get install -y wget unzip'
 	//				sh 'wget http://binaries-server'
 					sh 'wget http://binaries-server/index.html'
-					sh 'cat tests/basic-install | DEBIAN_FRONTEND=noninteractive dpkg -i *.deb'
+					sh 'ls'
+					sh 'cat tests/debconf/basic-install | DEBIAN_FRONTEND=noninteractive dpkg -i *.deb'
 				}
 			}
 		}
