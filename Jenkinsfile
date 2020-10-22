@@ -9,15 +9,6 @@ def withDockerNetwork(Closure inner) {
 }
 
 node {
-	stage('Build Package') {
-		checkout scm
-		def builderImage = docker.build("builder-image", "-f docker/Dockerfile.builder .")
-		builderImage.inside {
-			sh 'cd packaging && BINARIES_SERVER="http://binaries-server" dpkg-buildpackage -us -uc -b'
-			stash includes: '*.deb', name: 'deb-package'
-		}
-	}
-
 	stage('Build binaries') {
 	    docker.image('storjlabs/golang:1.15.1').inside("-u root:root") {
 			try {
@@ -44,28 +35,14 @@ node {
 			}
 	    }
 	}
-	stage('Test Installation') {
+	stage('Build Package') {
 		checkout scm
-		unstash 'deb-package'
-		unstash 'storagenode-binaries'
-		def binaries_server = docker.build("binaries-s", "-f ./docker/Dockerfile.binaries .")
-		def debian_buster_client = docker.image('debian:buster')
-		withDockerNetwork{ n ->
-			binaries_server.withRun("--network ${n} --name binaries-server") { c ->
-				debian_buster_client.inside("--network ${n} -u root:root") {
-					sh "apt-get update"
-					sh 'apt-get install -y wget unzip'
-	//				sh 'wget http://binaries-server'
-					sh 'wget http://binaries-server/index.html'
-					sh 'ls'
-					sh(script: "/bin/bash -c 'cat tests/debconf/basic-install | DEBIAN_FRONTEND=noninteractive dpkg -i *.deb'")
-				}
-			}
+		def builderImage = docker.build("builder-image", "-f docker/Dockerfile.builder .")
+		builderImage.inside {
+			sh 'cd packaging && BINARIES_SERVER="http://binaries-server" dpkg-buildpackage -us -uc -b'
+			stash includes: '*.deb', name: 'deb-package'
 		}
-
-		stash includes: '*.deb', name: 'deb-package'
 	}
-
 		// TODO
 		/*stage('Test Package') {
 			agent {
