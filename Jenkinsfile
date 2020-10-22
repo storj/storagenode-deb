@@ -24,8 +24,8 @@ node {
 		    	sh 'ls'
 				sh './release/storagenode --help > ./manpage'
 				sh 'cat ./manpage'
+				stash includes: './manpage*', name: 'storagenode-manpage'
 		    	stash includes: 'release/storagenode*', name: 'storagenode-binaries'
-				stash includes: './manpage', name: 'storagenode-manpage'
 			}
 			catch(err) {
 		    	throw err
