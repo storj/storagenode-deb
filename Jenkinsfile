@@ -22,9 +22,9 @@ node {
 		    	sh './scripts/release.sh build -o release/storagenode storj.io/storj/cmd/storagenode'
 		    	sh './scripts/release.sh build -o release/storagenode-updater storj.io/storj/cmd/storagenode-updater'
 		    	sh 'ls'
-				sh './release/storagenode --help > ./manpage'
+				sh './release/storagenode --help > release/manpage'
 				sh 'cat ./manpage'
-				stash includes: './manpage*', name: 'storagenode-manpage'
+				stash includes: 'release/manpage*', name: 'storagenode-manpage'
 		    	stash includes: 'release/storagenode*', name: 'storagenode-binaries'
 			}
 			catch(err) {
