@@ -25,6 +25,7 @@ node {
 				sh './release/storagenode --help > ./manpage'
 				sh 'cat ./manpage'
 		    	stash includes: 'release/storagenode*', name: 'storagenode-binaries'
+				stash includes: './manpage', name: 'storagenode-manpage'
 			}
 			catch(err) {
 		    	throw err
@@ -39,6 +40,8 @@ node {
 		checkout scm
 		def builderImage = docker.build("builder-image", "-f docker/Dockerfile.builder .")
 		builderImage.inside {
+			unstash 'storagenode-manpage'
+			sh "cp ./manpage packaging/debian/storagenode.1"
 			sh 'cd packaging && BINARIES_SERVER="http://binaries-server" dpkg-buildpackage -us -uc -b'
 			stash includes: '*.deb', name: 'deb-package'
 		}
