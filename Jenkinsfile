@@ -1,22 +1,24 @@
 def withDockerNetwork(Closure inner) {
-    try {
-        networkId = UUID.randomUUID().toString()
-        sh "docker network create ${networkId}"
-	sh "docker network ls"
-        inner.call(networkId)
-    } finally {
-        sh "docker network rm ${networkId}"
-    }
+	try {
+		networkId = UUID.randomUUID().toString()
+		sh "docker network create ${networkId}"
+		inner.call(networkId)
+	} finally {
+		sh "docker network rm ${networkId}"
+	}
 }
-stage('Build Package') {
-	node {
+
+node {
+	stage('Build Package') {
+		checkout scm
 		def builderImage = docker.build("builder-image", "-f docker/Dockerfile.builder .")
 		builderImage.inside {
+			unstash 'storagenode-manpage'
+			sh "cp ./release/manpage packaging/debian/storagenode.1"
 			sh 'cd packaging && dpkg-buildpackage -us -uc -b'
 			stash includes: '*.deb', name: 'deb-package'
-			}
 		}
-}
+	}
 		// TODO
 		/*stage('Test Package') {
 			agent {
@@ -26,10 +28,8 @@ stage('Build Package') {
 				unstash 'deb-package'
 			}
 		}*/
-		
-node {
-stage('Build Repository') {
-	
+
+	stage('Build Repository') {
 		def repoBuilderImage = docker.build("repo-builder", "-f ./apt-repository/Dockerfile.reprepro .")
 		repoBuilderImage.inside() {
 			sh 'git clean -fdx'
@@ -43,7 +43,7 @@ stage('Build Repository') {
 			}
 		}
 
-stage('Test Repository') {
+	stage('Test Repository') {
 
 		def apt_repository = docker.build("apt-nginx", "-f ./apt-repository/nginx/Dockerfile .")
 		def debian_buster_client = docker.build("debian-client", "-f ./docker/Dockerfile.debian-buster .")
