@@ -13,8 +13,6 @@ node {
 		checkout scm
 		def builderImage = docker.build("builder-image", "-f docker/Dockerfile.builder .")
 		builderImage.inside {
-			unstash 'storagenode-manpage'
-			sh "cp ./release/manpage packaging/debian/storagenode.1"
 			sh 'cd packaging && dpkg-buildpackage -us -uc -b'
 			stash includes: '*.deb', name: 'deb-package'
 		}
