@@ -30,6 +30,9 @@ You can see which steps will be performed by running 'dh binary --no-act' in the
 A directive 'dh_name' can be overriden by defining the 'override_dh_name' directive in the rules file.
 In our case, we define the 'override_dh_auto_install'. We create the directory that will be used for the binaries.
 
+Be careful, rules is not the right place to make changes to the user config. These steps are not run on the user machine.
+They are only performed when building the package.
+
 #### `override_dh_auto_install`
 ```make
 override_dh_auto_install:
@@ -48,13 +51,10 @@ override_dh_installsystemd:
 	dh_installsystemd --name=storagenode-updater
 ```
 
-Overrides default `override_dh_installsystemd` to install both `storagenode` and `storagenode-updater` services.
-
-Be careful, rules is not the right place to make changes to the user config. These steps are not run on the user machine.
-They are only performed when building the package.
+Overrides default `dh_installsystemd` to install both `storagenode` and `storagenode-updater` services.
 
 ### `preinst`
-This is the script that will be run before the installation process has completed.
+This is the script that will be run before the package files are unpacked.
 It takes as an argument the operation that is being performed ('install', 'install <old-version>', 'upgrade <new-version>',
 'abort-upgrade <new-version>').
 
@@ -189,8 +189,7 @@ update messages are ignored.
 
 #### `Install` section
 ##### `Alias=`
-A space-separated list of additional names this unit shall be installed under. The names listed here must have the same
-suffix (i.e. type) as the unit filename. This option may be specified more than once, in which case all listed names are
+A space-separated list of additional names this unit shall be installed under. This option may be specified more than once, in which case all listed names are
 used. At installation time, `systemctl` enable will create symlinks from these names to the unit filename. Note that not
 all unit types support such alias names, and this setting is not supported for them. Specifically, `mount`, `slice`, `swap`,
 and `automount` units do not support aliasing.
