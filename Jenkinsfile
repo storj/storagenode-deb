@@ -24,6 +24,11 @@ node {
 		    	sh 'ls'
 				sh './release/storagenode --help > release/manpage'
 				sh 'cat release/manpage'
+				SYNOPSIS = sh (
+					script: "awk '/Usage:/{flag=1; next} /Available/{flag=0} flag' release/manpage",
+					returnStdout: true
+				).trim()
+				sh "echo $SYNOPSIS"
 				stash includes: 'release/manpage*', name: 'storagenode-manpage'
 		    	stash includes: 'release/storagenode*', name: 'storagenode-binaries'
 			}
