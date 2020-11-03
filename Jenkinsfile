@@ -24,11 +24,6 @@ node {
 		    	sh 'ls'
 				sh './release/storagenode --help > release/manpage'
 				sh 'cat release/manpage'
-				SYNOPSIS = sh (
-					script: "awk '/Usage:/{flag=1; next} /Available/{flag=0} flag' release/manpage",
-					returnStdout: true
-				).trim()
-				sh "echo $SYNOPSIS"
 				stash includes: 'release/manpage*', name: 'storagenode-manpage'
 		    	stash includes: 'release/storagenode*', name: 'storagenode-binaries'
 			}
@@ -46,7 +41,8 @@ node {
 		def builderImage = docker.build("builder-image", "-f docker/Dockerfile.builder .")
 		builderImage.inside {
 			unstash 'storagenode-manpage'
-			sh "cp ./release/manpage packaging/debian/storagenode.1"
+			sh "cd scripts && ./generate-manpage.sh ./release/manpage && ls"
+			sh "cp scripts/storagenode.1 packaging/debian/storagenode.1"
 			sh 'cd packaging && BINARIES_SERVER="http://binaries-server" dpkg-buildpackage -us -uc -b'
 			stash includes: '*.deb', name: 'deb-package'
 		}
