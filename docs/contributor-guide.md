@@ -133,7 +133,7 @@ After        = syslog.target network.target
 Type         = simple
 User         = storj-storagenode
 Group        = storj-storagenode
-ExecStart    = /var/lib/storagenode/storagenode-updater run --config-dir "/etc/storagenode" --binary-location "/var/lib/storagenode/storagenode"
+ExecStart    = /var/lib/storagenode/storagenode-updater run --config-dir "/etc/storagenode" --binary-location "/var/lib/storagenode/storagenode" --service-name "storagenode"
 Restart      = on-failure
 NotifyAccess = main
 
