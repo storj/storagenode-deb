@@ -9,7 +9,6 @@ def withDockerNetwork(Closure inner) {
 }
 
 node {
-<<<<<<< HEAD
 	stage('Build binaries') {
 	    docker.image('storjlabs/golang:1.15.1').inside("-u root:root") {
 			try {
@@ -42,8 +41,6 @@ node {
 			}
 	    }
 	}
-=======
->>>>>>> 9577b9fa742ab42ab98bca35a01e9c4180d4509b
 	stage('Build Package') {
 		checkout scm
 		def builderImage = docker.build("builder-image", "-f docker/Dockerfile.builder .")
