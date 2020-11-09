@@ -2,5 +2,3 @@ FROM nginx:latest
 # maybe we should set version
 COPY ./release/storagenode /usr/share/nginx/html/storagenode
 COPY ./release/storagenode-updater /usr/share/nginx/html/storagenode-updater
-RUN ls /usr/share/nginx/html
-
