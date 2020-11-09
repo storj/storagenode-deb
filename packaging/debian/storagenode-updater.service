@@ -12,7 +12,7 @@
 
 [Unit]
 Description  = Storage Node Updater service
-After        = syslog.target
+After        = syslog.target network.target
 
 [Service]
 Type         = simple
