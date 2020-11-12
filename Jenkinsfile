@@ -85,6 +85,7 @@ node {
 			} catch(err){throw err}
 			finally {
 				sh "docker stop binaries-server" || true
+				sh "docker rm binaries-server" || true
 				sh "docker stop binaries-server2" || true
 			}
 		}
