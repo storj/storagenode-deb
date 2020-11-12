@@ -95,7 +95,7 @@ node {
 		def debian_buster_client = docker.build("debian-client", "-f ./docker/Dockerfile.debian-buster .")
 
 		withDockerNetwork{ n ->
-			sh "docker run -d --network 474af3b0-545c-4fd2-9418-5e57df0ec9ba --name binaries-server binaries-s"
+			sh "docker run -d --network ${n} --name binaries-server binaries-s"
 			apt_repository.withRun("--network ${n} --name apt-repository") { c ->
 				debian_buster_client.inside("--network ${n} -u root:root") {
 					sh "echo \"deb [trusted=yes] http://apt-repository buster-staging main\" > /etc/apt/sources.list.d/storjlabs.list"
