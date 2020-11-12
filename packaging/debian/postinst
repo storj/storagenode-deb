@@ -6,7 +6,7 @@
 set -e
 
 # Source debconf library.
-#. /usr/share/debconf/confmodule
+. /usr/share/debconf/confmodule
 
 # summary of how this script can be called:
 #        * <postinst> `configure' <most-recently-configured-version>
@@ -19,12 +19,9 @@ set -e
 #          <conflicting-package> <version>
 # for details, see https://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
-
 BINARIES_SERVER=${BINARIES_SERVER:-"http://10.0.2.2:8080"}
 DAEMON_USER=storj-storagenode
 DEBUG=0
-. /usr/share/debconf/confmodule
-
 arch=$(dpkg --print-architecture)
 if [ "$arch" = "armhf" ]; then
     arch="arm" # use GOARCH notation
@@ -39,7 +36,7 @@ get_binary() {
     mv /var/lib/storagenode/${binary}_linux_${arch} /var/lib/storagenode/${binary}
     rm $tmpfile
 }
-echo "Here we are"
+
 case "$1" in
     configure|abort-upgrade|abort-remove)
 	installed_version="$2"
@@ -102,7 +99,7 @@ case "$1" in
 	    # fix permissions
 	    chmod 644 /etc/storagenode/config.yaml
 	fi
-	
+
 	# add user and fix ownership
 	if ! getent passwd $DAEMON_USER >/dev/null; then
 	    adduser --system --group --disabled-login --home /var/lib/storagenode --quiet $DAEMON_USER
