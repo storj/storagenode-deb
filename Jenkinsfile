@@ -69,6 +69,8 @@ node {
 		try {
 			sh "docker run -d --network ${n} --name binaries-server -v `pwd`/release:/usr/share/nginx/html nginx:latest"
 			sh "docker exec binaries-server apt update"
+			sh "docker exec binaries-server ls"
+			sh "docker exec binaries-server ls /usr/share/nginx/html"
 			sh "docker exec binaries-server apt install -y zip"
 			sh "docker exec binaries-server 'cd /usr/share/nginx/html/ && zip storagenode_linux_amd64 storagenode'"
 			sh "docker exec binaries-server 'cd /usr/share/nginx/html/ && zip storagenode-updater_linux_amd64 storagenode-updater'"
