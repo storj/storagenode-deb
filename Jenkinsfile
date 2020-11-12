@@ -29,7 +29,7 @@ node {
     			    userRemoteConfigs: [[ url: 'https://github.com/storj/storj' ]]
 				])
 				sh './scripts/release.sh build -o release/storagenode storj.io/storj/cmd/storagenode'
-			sh './scripts/release.sh build -o release/storagenode-updater storj.io/storj/cmd/storagenode-updater'
+				sh './scripts/release.sh build -o release/storagenode-updater storj.io/storj/cmd/storagenode-updater'
 
 				stash includes: 'release/storagenode*', name: 'storagenode-binaries'
 			}
@@ -61,7 +61,7 @@ node {
 	stage('Test Repository') {
 		unstash 'deb-package'
 		unstash 'storagenode-binaries'
-		sh 'ls'
+		sh 'ls release'
 		def apt_repository = docker.build("apt-nginx", "-f ./apt-repository/nginx/Dockerfile .")
 		def debian_buster_client = docker.build("debian-client", "-f ./docker/Dockerfile.debian-buster .")
 		docker.build("binaries-s", "-f ./docker/Dockerfile.binaries .")
