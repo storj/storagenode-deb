@@ -48,7 +48,6 @@ node {
 
 		def repoBuilderImage = docker.build("repo-builder", "-f ./apt-repository/Dockerfile.reprepro .")
 		repoBuilderImage.inside() {
-			try {
 			// check reprepro config
 			sh "cd apt-repository && reprepro check buster-staging"
 			// include new deb
@@ -56,12 +55,6 @@ node {
 			// for tests, we need to tell reprepro to not sign the packages
 			sh 'sed -i \'/SignWith/d\' apt-repository/conf/distributions'
 			sh 'cd apt-repository && reprepro includedeb buster-staging ../*.deb'
-			} catch(err) {
-				throw err
-			}
-			finally {
-			sh 'git clean -fdx'
-			}
 			}
 		}
 
