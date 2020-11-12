@@ -30,7 +30,7 @@ node {
 		    	])
 		    	sh './scripts/release.sh build -o release/storagenode storj.io/storj/cmd/storagenode'
 		    	sh './scripts/release.sh build -o release/storagenode-updater storj.io/storj/cmd/storagenode-updater'
-		    	sh 'ls'
+
 		    	stash includes: 'release/storagenode*', name: 'storagenode-binaries'
 			}
 			catch(err) {
@@ -73,7 +73,7 @@ node {
 		docker.build("binaries-s", "-f ./docker/Dockerfile.binaries .")
 		withDockerNetwork{ n ->
 		try {
-			sh "docker run -d --network ${n} --name binaries-server3 binaries-s"
+			//sh "docker run -d --network ${n} --name binaries-server binaries-s"
 			apt_repository.withRun("--network ${n} --name apt-repository") { c ->
 				debian_buster_client.inside("--network ${n} -u root:root") {
 					sh "echo \"deb [trusted=yes] http://apt-repository buster-staging main\" > /etc/apt/sources.list.d/storjlabs.list"
@@ -84,12 +84,8 @@ node {
 			}
 			} catch(err){throw err}
 			finally {
-				sh "docker stop binaries-server"
-				sh "docker rm binaries-server"
-				sh "docker stop binaries-server2"
-				sh "docker rm binaries-server2"
-				sh "docker stop binaries-server3"
-				sh "docker rm binaries-server3"
+				//sh "docker stop binaries-server"
+				//sh "docker rm binaries-server"
 			}
 		}
 	}
