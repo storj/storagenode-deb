@@ -48,7 +48,7 @@ node {
 
 		def repoBuilderImage = docker.build("repo-builder", "-f ./apt-repository/Dockerfile.reprepro .")
 		repoBuilderImage.inside() {
-			sh 'git clean -fdx'
+			try {
 			// check reprepro config
 			sh "cd apt-repository && reprepro check buster-staging"
 			// include new deb
@@ -56,6 +56,12 @@ node {
 			// for tests, we need to tell reprepro to not sign the packages
 			sh 'sed -i \'/SignWith/d\' apt-repository/conf/distributions'
 			sh 'cd apt-repository && reprepro includedeb buster-staging ../*.deb'
+			} catch(err) {
+				throw err
+			}
+			finally {
+			sh 'git clean -fdx'
+			}
 			}
 		}
 
@@ -65,16 +71,21 @@ node {
 		def debian_buster_client = docker.build("debian-client", "-f ./docker/Dockerfile.debian-buster .")
 
 		withDockerNetwork{ n ->
-			sh "docker run -d --network ${n} --name binaries-server2 binaries-s"
+		try {
+			sh "docker run -d --network ${n} --name binaries-server binaries-s"
 			apt_repository.withRun("--network ${n} --name apt-repository") { c ->
 				debian_buster_client.inside("--network ${n} -u root:root") {
 					sh "echo \"deb [trusted=yes] http://apt-repository buster-staging main\" > /etc/apt/sources.list.d/storjlabs.list"
 					sh "apt-get update"
 					sh "apt-cache search storagenode"
-					sh "DEBIAN_FRONTEND=noninteractive BINARIES_SERVER=http://binaries-server apt install storagenode"
+					sh "DEBIAN_FRONTEND=noninteractive BINARIES_SERVER=http://binaries-server apt install -y storagenode"
 				}
 			}
-			sh "docker stop binaries-server"
+			} catch(err){throw err}
+			finally {
+				sh "docker stop binaries-server" || true
+				sh "docker stop binaries-server2" || true
+			}
 		}
 	}
 }
