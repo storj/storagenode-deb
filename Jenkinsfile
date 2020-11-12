@@ -73,6 +73,7 @@ node {
 				debian_buster_client.inside("--network ${n} -u root:root") {
 					sh "echo \"deb [trusted=yes] http://apt-repository buster-staging main\" > /etc/apt/sources.list.d/storjlabs.list"
 					sh "apt-get update"
+					sh 'apt-get install -y wget unzip debconf-utils'
 					sh "apt-cache search storagenode"
 					sh "/bin/bash -c 'cat tests/debconf/basic-install | debconf-set-selections'"
 					sh "/bin/bash -c 'debconf-get-selections | grep storagenode'"
