@@ -20,7 +20,6 @@ node {
 
 	stage('Build binaries') {
 	    docker.image('storjlabs/golang:1.15.1').inside("-u root:root") {
-			sh "apt install -y zip"
 			try {
 		    	checkout([$class: 'GitSCM',
   					branches: [[name: '*/master']],
@@ -28,23 +27,20 @@ node {
     				extensions: [],
     			    submoduleCfg: [],
     			    userRemoteConfigs: [[ url: 'https://github.com/storj/storj' ]]
-		    	])
-		    	sh './scripts/release.sh build -o release/storagenode storj.io/storj/cmd/storagenode'
-		    	sh './scripts/release.sh build -o release/storagenode-updater storj.io/storj/cmd/storagenode-updater'
-				sh 'zip storagenode_amd64 release/storagenode'
-				sh 'zip storagenode-updater_amd64 release/storagenode-updater'
+				])
+				sh './scripts/release.sh build -o release/storagenode storj.io/storj/cmd/storagenode'
+			sh './scripts/release.sh build -o release/storagenode-updater storj.io/storj/cmd/storagenode-updater'
 
-
-				stash includes: 'storagenode*.zip', name: 'storagenode-binaries'
+				stash includes: 'release/storagenode*', name: 'storagenode-binaries'
 			}
 			catch(err) {
-		    	throw err
+				throw err
 			}
 			finally {
-		    	sh 'git clean -fdx'
-		    	sh "rm -rf release"
+				sh 'git clean -fdx'
+				sh "rm -rf release"
 			}
-	    }
+		}
 	}
 
 	stage('Build Repository') {
