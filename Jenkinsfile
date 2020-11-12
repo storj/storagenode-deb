@@ -42,38 +42,6 @@ node {
 			}
 	    }
 	}
-	stage('Test Installation') {
-		checkout scm
-		unstash 'deb-package'
-		unstash 'storagenode-binaries'
-		def binaries_server = docker.build("binaries-s", "-f ./docker/Dockerfile.binaries .")
-		def debian_buster_client = docker.image('debian:buster')
-		withDockerNetwork{ n ->
-			binaries_server.withRun("--network ${n} --name binaries-server") { c ->
-				debian_buster_client.inside("--network ${n} -u root:root") {
-					sh "apt-get update"
-					sh 'apt-get install -y wget unzip debconf-utils'
-	//				sh 'wget http://binaries-server'
-					sh 'wget http://binaries-server/index.html'
-					sh 'ls'
-					sh "/bin/bash -c 'cat tests/debconf/basic-install | debconf-set-selections'"
-					sh "/bin/bash -c 'debconf-get-selections | grep storagenode'"
-					//sh(script: "/bin/bash -c 'DEBIAN_FRONTEND=noninteractive dpkg -i *.deb'")
-				}
-			}
-		}
-
-		stash includes: '*.deb', name: 'deb-package'
-	}
-		// TODO
-		/*stage('Test Package') {
-			agent {
-				dockerfile {}
-			}
-			steps {
-				unstash 'deb-package'
-			}
-		}*/
 
 	stage('Build Repository') {
 		def repoBuilderImage = docker.build("repo-builder", "-f ./apt-repository/Dockerfile.reprepro .")
@@ -95,7 +63,7 @@ node {
 		def debian_buster_client = docker.build("debian-client", "-f ./docker/Dockerfile.debian-buster .")
 
 		withDockerNetwork{ n ->
-			sh "docker run -d --network ${n} --name binaries-server binaries-s"
+			sh "docker run -d --network ${n} --name binaries-server2 binaries-s"
 			apt_repository.withRun("--network ${n} --name apt-repository") { c ->
 				debian_buster_client.inside("--network ${n} -u root:root") {
 					sh "echo \"deb [trusted=yes] http://apt-repository buster-staging main\" > /etc/apt/sources.list.d/storjlabs.list"
