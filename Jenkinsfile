@@ -20,6 +20,7 @@ node {
 
 	stage('Build binaries') {
 	    docker.image('storjlabs/golang:1.15.1').inside("-u root:root") {
+			sh "apt install -y zip"
 			try {
 		    	checkout([$class: 'GitSCM',
   					branches: [[name: '*/master']],
