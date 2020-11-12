@@ -30,8 +30,11 @@ node {
 		    	])
 		    	sh './scripts/release.sh build -o release/storagenode storj.io/storj/cmd/storagenode'
 		    	sh './scripts/release.sh build -o release/storagenode-updater storj.io/storj/cmd/storagenode-updater'
+				sh 'zip storagenode_amd64 release/storagenode'
+				sh 'zip storagenode-updater_amd64 release/storagenode-updater'
 
-		    	stash includes: 'release/storagenode*', name: 'storagenode-binaries'
+
+				stash includes: 'storagenode*.zip', name: 'storagenode-binaries'
 			}
 			catch(err) {
 		    	throw err
@@ -61,7 +64,7 @@ node {
 	stage('Test Repository') {
 		unstash 'deb-package'
 		unstash 'storagenode-binaries'
-
+		sh 'ls'
 		def apt_repository = docker.build("apt-nginx", "-f ./apt-repository/nginx/Dockerfile .")
 		def debian_buster_client = docker.build("debian-client", "-f ./docker/Dockerfile.debian-buster .")
 		docker.build("binaries-s", "-f ./docker/Dockerfile.binaries .")

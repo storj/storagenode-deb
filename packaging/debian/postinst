@@ -58,7 +58,7 @@ case "$1" in
 	diskspace="$RET"
 
         if [ $DEBUG -eq 0 ]; then
-            echo "binary server: $BINARY_SERVER"
+            echo "binary server: $BINARIES_SERVER"
             echo "identity dir: $identitydir"
             echo "wallet address: $wallet"
             echo "email: $email"
