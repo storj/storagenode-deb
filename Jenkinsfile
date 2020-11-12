@@ -64,11 +64,14 @@ node {
 		sh 'ls release'
 		def apt_repository = docker.build("apt-nginx", "-f ./apt-repository/nginx/Dockerfile .")
 		def debian_buster_client = docker.build("debian-client", "-f ./docker/Dockerfile.debian-buster .")
-		docker.build("binaries-s", "-f ./docker/Dockerfile.binaries .")
 
 		withDockerNetwork{ n ->
 		try {
-			sh "docker run -d --network ${n} --name binaries-server binaries-s"
+			sh "docker run -d --network ${n} --name binaries-server -v `pwd`/release:/usr/share/nginx/html nginx:latest"
+			sh "docker exec binaries-server apt update"
+			sh "docker exec binaries-server apt install -y zip"
+			sh "docker exec binaries-server zip /usr/share/nginx/html/storagenode_amd64 /usr/share/nginx/html/storagenode"
+			sh "docker exec binaries-server zip /usr/share/nginx/html/storagenode-updater_amd64 /usr/share/nginx/html/storagenode-updater"
 			apt_repository.withRun("--network ${n} --name apt-repository") { c ->
 				debian_buster_client.inside("--network ${n} -u root:root") {
 					sh "echo \"deb [trusted=yes] http://apt-repository buster-staging main\" > /etc/apt/sources.list.d/storjlabs.list"
