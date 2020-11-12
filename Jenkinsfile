@@ -69,6 +69,7 @@ node {
 
 		def apt_repository = docker.build("apt-nginx", "-f ./apt-repository/nginx/Dockerfile .")
 		def debian_buster_client = docker.build("debian-client", "-f ./docker/Dockerfile.debian-buster .")
+		unstash 'storagenode-binaries'
 		docker.build("binaries-s", "-f ./docker/Dockerfile.binaries .")
 		withDockerNetwork{ n ->
 		try {
