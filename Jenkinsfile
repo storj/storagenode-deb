@@ -66,11 +66,13 @@ node {
 		}
 
 	stage('Test Repository') {
+		unstash 'deb-package'
+		unstash 'storagenode-binaries'
 
 		def apt_repository = docker.build("apt-nginx", "-f ./apt-repository/nginx/Dockerfile .")
 		def debian_buster_client = docker.build("debian-client", "-f ./docker/Dockerfile.debian-buster .")
-		unstash 'storagenode-binaries'
 		docker.build("binaries-s", "-f ./docker/Dockerfile.binaries .")
+
 		withDockerNetwork{ n ->
 		try {
 			//sh "docker run -d --network ${n} --name binaries-server binaries-s"
@@ -84,8 +86,8 @@ node {
 			}
 			} catch(err){throw err}
 			finally {
-				//sh "docker stop binaries-server"
-				//sh "docker rm binaries-server"
+				sh "docker stop binaries-server"
+				sh "docker rm binaries-server"
 			}
 		}
 	}
