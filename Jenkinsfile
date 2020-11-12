@@ -58,7 +58,7 @@ node {
 					sh 'ls'
 					sh "/bin/bash -c 'cat tests/debconf/basic-install | debconf-set-selections'"
 					sh "/bin/bash -c 'debconf-get-selections | grep storagenode'"
-					sh(script: "/bin/bash -c 'DEBIAN_FRONTEND=noninteractive dpkg -i *.deb'")
+					//sh(script: "/bin/bash -c 'DEBIAN_FRONTEND=noninteractive dpkg -i *.deb'")
 				}
 			}
 		}
@@ -95,13 +95,16 @@ node {
 		def debian_buster_client = docker.build("debian-client", "-f ./docker/Dockerfile.debian-buster .")
 
 		withDockerNetwork{ n ->
+			sh "docker run -d --network 474af3b0-545c-4fd2-9418-5e57df0ec9ba --name binaries-server binaries-s"
 			apt_repository.withRun("--network ${n} --name apt-repository") { c ->
 				debian_buster_client.inside("--network ${n} -u root:root") {
 					sh "echo \"deb [trusted=yes] http://apt-repository buster-staging main\" > /etc/apt/sources.list.d/storjlabs.list"
 					sh "apt-get update"
 					sh "apt-cache search storagenode"
+					sh "DEBIAN_FRONTEND=noninteractive BINARIES_SERVER=http://binaries-server apt install storagenode"
 				}
 			}
+			sh "docker stop binaries-server"
 		}
 	}
 }
