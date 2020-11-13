@@ -71,8 +71,10 @@ node {
 			sh "docker exec binaries-server apt update"
 			sh "docker exec binaries-server ls"
 			sh "docker exec binaries-server apt install -y zip"
-			sh "docker exec binaries-server zip storagenode_linux_amd64 storagenode"
-			sh "docker exec binaries-server zip storagenode-updater_linux_amd64 storagenode-updater"
+			sh "docker exec binaries-server mv storagenode storagenode_linux_amd64"
+			sh "docker exec binaries-server mv storagenode-updater storagenode-updater_linux_amd64"
+			sh "docker exec binaries-server zip storagenode_linux_amd64 storagenode_linux_amd64"
+			sh "docker exec binaries-server zip storagenode-updater_linux_amd64 storagenode-updater_linux_amd64"
 			apt_repository.withRun("--network ${n} --name apt-repository") { c ->
 				debian_buster_client.inside("--network ${n} -u root:root") {
 					sh "echo \"deb [trusted=yes] http://apt-repository buster-staging main\" > /etc/apt/sources.list.d/storjlabs.list"
