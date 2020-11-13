@@ -88,6 +88,8 @@ node {
 			finally {
 				sh "docker stop binaries-server"
 				sh "docker rm binaries-server"
+				sh "rm ./release/storagenode_amd64.zip"
+				sh "rm ./release/storagenode-updater_amd64.zip"
 			}
 		}
 	}
