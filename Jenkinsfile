@@ -64,7 +64,7 @@ node {
 		sh 'ls release'
 		def apt_repository = docker.build("apt-nginx", "-f ./apt-repository/nginx/Dockerfile .")
 		def debian_buster_client = docker.build("debian-client", "-f ./docker/Dockerfile.debian-buster .")
-		docker.build("storj-ci", "--pull https://github.com/storj/ci.git")
+		docker.build("storj-sim", "--pull https://github.com/storj/ci.git")
 
 		withDockerNetwork{ n ->
 		try {
