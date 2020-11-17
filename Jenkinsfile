@@ -64,12 +64,12 @@ node {
 		sh 'ls release'
 		def apt_repository = docker.build("apt-nginx", "-f ./apt-repository/nginx/Dockerfile .")
 		def debian_buster_client = docker.build("debian-client", "-f ./docker/Dockerfile.debian-buster .")
-		docker.build("storj-sim", "--pull https://github.com/storj/ci.git")
+		docker.build("storj-ci", "--pull https://github.com/storj/ci.git")
 
 		withDockerNetwork{ n ->
 		try {
 
-			sh 'docker run -d --network ${n} --name storj-sim -u root:root --cap-add SYS_PTRACE -v "/tmp/gomod":/go/pkg/mod'
+			sh 'docker run -d --network ${n} --name storj-sim -u root:root --cap-add SYS_PTRACE -v "/tmp/gomod":/go/pkg/mod storj-ci'
 			sh "docker run -d --network ${n} --name binaries-server -v `pwd`/release:/usr/share/nginx/html -w /usr/share/nginx/html nginx:latest"
 			sh "docker exec storj-sim service postgresql start"
 			sh "docker exec storj-sim cockroach start-single-node --insecure --store=\'/tmp/crdb\' --listen-addr=localhost:26257 --http-addr=localhost:8080 --cache 512MiB --max-sql-memory 512MiB --background"
