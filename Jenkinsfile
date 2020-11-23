@@ -69,7 +69,7 @@ node {
 		withDockerNetwork{ n ->
 		try {
 
-			sh "docker run -d --network ${n} --name storj-sim -u root:root --cap-add SYS_PTRACE -v '/tmp/gomod':/go/pkg/mod storj-ci"
+			sh "docker run -d --network ${n} --name storj-ci -u root:root --cap-add SYS_PTRACE -v '/tmp/gomod':/go/pkg/mod storj-ci"
 			sh "docker run -d --network ${n} --name binaries-server -v `pwd`/release:/usr/share/nginx/html -w /usr/share/nginx/html nginx:latest"
 			sh "docker exec storj-sim service postgresql start"
 			sh "docker exec storj-sim cockroach start-single-node --insecure --store=\'/tmp/crdb\' --listen-addr=localhost:26257 --http-addr=localhost:8080 --cache 512MiB --max-sql-memory 512MiB --background"
