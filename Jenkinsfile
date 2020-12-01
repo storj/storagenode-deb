@@ -96,8 +96,8 @@ node {
 				sh "docker rm binaries-server || true"
 				sh "docker stop storj-sim || true"
 				sh "docker rm storj-sim || true"
-				sh "rm ./release/storagenode_amd64.zip || true"
-				sh "rm ./release/storagenode-updater_amd64.zip|| true"
+				sh "rm -f ./release/storagenode_amd64.zip"
+				sh "rm -f ./release/storagenode-updater_amd64.zip"
 			}
 		}
 	}
