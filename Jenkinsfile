@@ -92,12 +92,12 @@ node {
 			}
 			} catch(err){throw err}
 			finally {
-				sh "docker stop binaries-server"
-				sh "docker rm binaries-server"
-				sh "docker stop storj-sim"
-				sh "docker rm storj-sim"
-				sh "rm ./release/storagenode_amd64.zip"
-				sh "rm ./release/storagenode-updater_amd64.zip"
+				sh "docker stop binaries-server" || true
+				sh "docker rm binaries-server" || true
+				sh "docker stop storj-sim" || true
+				sh "docker rm storj-sim" || true
+				sh "rm ./release/storagenode_amd64.zip" || true
+				sh "rm ./release/storagenode-updater_amd64.zip" || true
 			}
 		}
 	}
