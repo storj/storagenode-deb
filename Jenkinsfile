@@ -69,7 +69,7 @@ node {
 		withDockerNetwork{ n ->
 		try {
 
-			sh "docker run -d --network ${n} --name storj-sim -u root:root --cap-add SYS_PTRACE -v '/tmp/gomod':/go/pkg/mod -v `pwd`:/go/  --entrypoint /go/scripts/run.sh storj-ci"
+			sh "docker run -d --network ${n} --name storj-sim -u root:root -v '/tmp/gomod':/go/pkg/mod -v `pwd`:/go/  --entrypoint /go/scripts/run.sh storj-ci"
 			sh "docker run -d --network ${n} --name binaries-server -v `pwd`/release:/usr/share/nginx/html -w /usr/share/nginx/html nginx:latest"
 			sh "docker exec storj-sim service postgresql start"
 			sh "docker exec storj-sim cockroach start-single-node --insecure --store=\'/tmp/crdb\' --listen-addr=localhost:26257 --http-addr=localhost:8080 --cache 512MiB --max-sql-memory 512MiB --background"
@@ -92,12 +92,12 @@ node {
 			}
 			} catch(err){throw err}
 			finally {
-				sh "docker stop binaries-server" || true
-				sh "docker rm binaries-server" || true
-				sh "docker stop storj-sim" || true
-				sh "docker rm storj-sim" || true
-				sh "rm ./release/storagenode_amd64.zip" || true
-				sh "rm ./release/storagenode-updater_amd64.zip" || true
+				sh "docker stop binaries-server || true"
+				sh "docker rm binaries-server || true"
+				sh "docker stop storj-sim || true"
+				sh "docker rm storj-sim || true"
+				sh "rm ./release/storagenode_amd64.zip || true"
+				sh "rm ./release/storagenode-updater_amd64.zip|| true"
 			}
 		}
 	}
