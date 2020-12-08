@@ -105,7 +105,7 @@ node {
 			}
 			} catch(err){throw err}
 			finally {
-				sh "docker exec storj-sim storj-sim network env"
+				sh "docker logs storj-sim || true"
 				sh "docker stop binaries-server || true"
 				sh "docker rm binaries-server || true"
 				sh "docker stop storj-sim || true"
