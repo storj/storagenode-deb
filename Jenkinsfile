@@ -85,7 +85,7 @@ node {
 				)
 			}
 			IDENTITY_DIR = sh (
-				script: "docker exec storj-sim storj-sim network env STORAGENODE_9_DIR"
+				script: "docker exec storj-sim storj-sim network env STORAGENODE_9_DIR",
 				returnStdout: true
 			)
 
