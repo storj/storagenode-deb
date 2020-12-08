@@ -78,7 +78,7 @@ node {
 			sh "docker exec binaries-server zip storagenode_linux_amd64 storagenode_linux_amd64"
 			sh "docker exec binaries-server zip storagenode-updater_linux_amd64 storagenode-updater_linux_amd64"
 
-			sh "docker logs storj-sim"
+			sh "/bin/bash -c docker logs storj-sim"
 			docker.image('curlimages/curl').inside("--network ${n}") {
 				sh (
 					script: "while ! curl --output /dev/null --silent http://storj-sim:11000/minio/health/live; do sleep 1; done",
@@ -106,7 +106,7 @@ node {
 			}
 			} catch(err){throw err}
 			finally {
-				sh "docker logs storj-sim"
+			sh "/bin/bash -c docker logs storj-sim || true"
 				sh "docker stop binaries-server || true"
 				sh "docker rm binaries-server || true"
 				sh "docker stop storj-sim || true"
