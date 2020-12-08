@@ -68,8 +68,8 @@ node {
 
 		withDockerNetwork{ n ->
 		try {
-
-			sh "docker run -d --network ${n} --name storj-sim -u root:root -v '/tmp/gomod':/go/pkg/mod -v `pwd`:/go/  --entrypoint /go/scripts/run.sh storj-ci"
+			sh "mkdir ./identity-files"
+			sh "docker run -d --network ${n} --name storj-sim -u root:root -v `pwd`/identity-files:/identity-files -v '/tmp/gomod':/go/pkg/mod -v `pwd`:/go/  --entrypoint /go/scripts/run.sh storj-ci"
 			sh "docker run -d --network ${n} --name binaries-server -v `pwd`/release:/usr/share/nginx/html -w /usr/share/nginx/html nginx:latest"
 			sh "docker exec binaries-server apt update"
 			sh "docker exec binaries-server apt install -y zip"
@@ -77,6 +77,21 @@ node {
 			sh "docker exec binaries-server mv storagenode-updater storagenode-updater_linux_amd64"
 			sh "docker exec binaries-server zip storagenode_linux_amd64 storagenode_linux_amd64"
 			sh "docker exec binaries-server zip storagenode-updater_linux_amd64 storagenode-updater_linux_amd64"
+
+			docker.image('curlimages/curl').inside("--network ${n}") {
+				sh (
+					script: "while ! curl --output /dev/null --silent http://storj-sim:11000/minio/health/live; do sleep 1; done",
+					label: "Wait for storj-sim to be ready"
+				)
+			}
+			IDENTITY_DIR = sh (
+				script: "docker exec storj-sim storj-sim network env STORAGENODE_9_DIR"
+				returnStdout: true
+			)
+
+			sh "docker exec storj-sim cp -r ${STORAGENODE_9_DIR} /identity-files"
+			sh "docker exec storj-sim ls /identity-files"
+			sh "ls ./identity-files"
 			apt_repository.withRun("--network ${n} --name apt-repository") { c ->
 				debian_buster_client.inside("--network ${n} -u root:root") {
 					sh "echo \"deb [trusted=yes] http://apt-repository buster-staging main\" > /etc/apt/sources.list.d/storjlabs.list"
@@ -90,12 +105,14 @@ node {
 			}
 			} catch(err){throw err}
 			finally {
+				sh "docker exec storj-sim storj-sim network env"
 				sh "docker stop binaries-server || true"
 				sh "docker rm binaries-server || true"
 				sh "docker stop storj-sim || true"
 				sh "docker rm storj-sim || true"
 				sh "rm -f ./release/storagenode_amd64.zip"
 				sh "rm -f ./release/storagenode-updater_amd64.zip"
+				sh "rm -f ./identity-files"
 			}
 		}
 	}

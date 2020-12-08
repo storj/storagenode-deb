@@ -10,8 +10,8 @@ storj-sim -x network destroy
 echo "STORJ_SIM SETUP NETWORK"
 
 # setup the network
-storj-sim -x  --host 0.0.0.0 --satellites 1 network --dev --postgres=$STORJ_SIM_POSTGRES setup
+storj-sim -x  --host 0.0.0.0 --satellites 1 --storage-nodes 10 network --dev --postgres=$STORJ_SIM_POSTGRES setup
 sed -i 's/# metainfo.rate-limiter.enabled: true/metainfo.rate-limiter.enabled: false/g' $(storj-sim network env SATELLITE_0_DIR)/config.yaml
 
 echo "STORJ_SIM RUN NETWORK"
-storj-sim -x --host 0.0.0.0 --satellites 1 network --dev run
+storj-sim -x --host 0.0.0.0 --satellites 1 --storage-nodes 9 network --dev run
