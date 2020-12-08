@@ -113,7 +113,7 @@ node {
 				sh "docker rm storj-sim || true"
 				sh "rm -f ./release/storagenode_amd64.zip"
 				sh "rm -f ./release/storagenode-updater_amd64.zip"
-				sh "rm -f ./identity-files"
+				sh "rm -rf ./identity-files"
 			}
 		}
 	}
