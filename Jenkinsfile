@@ -69,7 +69,7 @@ node {
 		withDockerNetwork{ n ->
 		try {
 			sh "mkdir ./identity-files"
-			sh "docker run -d --network ${n} --name storj-sim -u root:root -v `pwd`/identity-files:/identity-files -v '/tmp/gomod':/go/pkg/mod -v `pwd`:/go/  --entrypoint /go/scripts/run.sh storj-ci"
+			sh "docker run -d --network ${n} --name storj-sim -u root:root -v `pwd`/identity-files:/identity-files  -v `pwd`:/go/  --entrypoint /go/scripts/run.sh storj-ci"
 			sh "docker run -d --network ${n} --name binaries-server -v `pwd`/release:/usr/share/nginx/html -w /usr/share/nginx/html nginx:latest"
 			sh "docker exec binaries-server apt update"
 			sh "docker exec binaries-server apt install -y zip"
