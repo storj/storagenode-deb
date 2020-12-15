@@ -1,0 +1,20 @@
+FROM storj-ci
+
+RUN mkdir -p /storj-sim
+
+COPY ./scripts/run.sh /go/ci/run.sh
+
+RUN git clone https://github.com/storj/storj.git
+
+RUN cd storj && make install-sim
+# RUN go install -v \
+# 	storj.io/storj/cmd/satellite \
+# 	storj.io/storj/cmd/storagenode \
+# 	storj.io/storj/cmd/storj-sim \
+# 	storj.io/storj/cmd/versioncontrol \
+# 	storj.io/storj/cmd/uplink \
+# 	storj.io/storj/cmd/identity \
+# 	storj.io/storj/cmd/certificates \
+#     storj.io/gateway
+
+ENTRYPOINT [ "/go/ci/run.sh" ]

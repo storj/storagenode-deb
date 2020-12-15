@@ -1,8 +1,13 @@
+#!/bin/bash
+
+
+
 service postgresql start
-go install storj.io/gateway
+
+
 until pg_isready; do sleep 3; done
-psql -U postgres -c 'create database teststorj4;'
-export STORJ_SIM_POSTGRES=postgres://postgres@localhost/teststorj4?sslmode=disable
+psql -U postgres -c 'create database teststorj;'
+export STORJ_SIM_POSTGRES=postgres://postgres@localhost/teststorj?sslmode=disable
 echo "STORJ_SIM DESTROY NETWORK"
 storj-sim -x network destroy
 

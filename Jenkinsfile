@@ -65,11 +65,12 @@ node {
 		def apt_repository = docker.build("apt-nginx", "-f ./apt-repository/nginx/Dockerfile .")
 		def debian_buster_client = docker.build("debian-client", "-f ./docker/Dockerfile.debian-buster .")
 		docker.build("storj-ci", "--pull https://github.com/storj/ci.git")
+		docker.build("sim", "-f ./docker/Dockerfile.sim .")
 
 		withDockerNetwork{ n ->
 		try {
 			sh "mkdir ./identity-files"
-			sh "docker run -d --network ${n} --name storj-sim -u root:root -v `pwd`/identity-files:/identity-files  -v `pwd`:/go/  --entrypoint /go/scripts/run.sh storj-ci"
+			sh "docker run -d --network ${n} --name storj-sim -u root:root -v `pwd`/identity-files:/identity-files --entrypoint /go/scripts/run.sh sim"
 			sh "docker run -d --network ${n} --name binaries-server -v `pwd`/release:/usr/share/nginx/html -w /usr/share/nginx/html nginx:latest"
 			sh "docker exec binaries-server apt update"
 			sh "docker exec binaries-server apt install -y zip"
@@ -77,6 +78,7 @@ node {
 			sh "docker exec binaries-server mv storagenode-updater storagenode-updater_linux_amd64"
 			sh "docker exec binaries-server zip storagenode_linux_amd64 storagenode_linux_amd64"
 			sh "docker exec binaries-server zip storagenode-updater_linux_amd64 storagenode-updater_linux_amd64"
+			sh "ls ./identity-files"
 
 			sh '/bin/bash -c \"docker logs storj-sim\" || true'
 			docker.image('curlimages/curl').inside("--network ${n}") {
