@@ -78,9 +78,7 @@ node {
 			sh "docker exec binaries-server mv storagenode-updater storagenode-updater_linux_amd64"
 			sh "docker exec binaries-server zip storagenode_linux_amd64 storagenode_linux_amd64"
 			sh "docker exec binaries-server zip storagenode-updater_linux_amd64 storagenode-updater_linux_amd64"
-			sh "ls ./identity-files"
 
-			sh '/bin/bash -c \"docker logs storj-sim\" || true'
 			docker.image('curlimages/curl').inside("--network ${n}") {
 				sh (
 					script: "while ! curl --output /dev/null --silent http://storj-sim:11000/minio/health/live; do sleep 1; done",
@@ -91,8 +89,6 @@ node {
 				script: "docker exec storj-sim storj-sim network env STORAGENODE_9_DIR",
 				returnStdout: true
 			)
-
-			sh "docker exec storj-sim cp -r ${STORAGENODE_9_DIR} /identity-files"
 			sh "docker exec storj-sim ls /identity-files"
 			sh "ls ./identity-files"
 			apt_repository.withRun("--network ${n} --name apt-repository") { c ->
@@ -108,6 +104,7 @@ node {
 			}
 			} catch(err){throw err}
 			finally {
+				sh "docker exec storj-sim rm -rf ./identity-files"
 				sh '/bin/bash -c "docker logs storj-sim" || true'
 				sh "docker stop binaries-server || true"
 				sh "docker rm binaries-server || true"
@@ -115,7 +112,6 @@ node {
 				sh "docker rm storj-sim || true"
 				sh "rm -f ./release/storagenode_amd64.zip"
 				sh "rm -f ./release/storagenode-updater_amd64.zip"
-				sh "rm -rf ./identity-files"
 			}
 		}
 	}
