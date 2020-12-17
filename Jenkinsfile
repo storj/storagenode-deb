@@ -11,6 +11,9 @@ def withDockerNetwork(Closure inner) {
 node {
 	stage('Build Package') {
 		checkout scm
+		sh "mkdir -p identity-files/9"
+		sh "touch identity-files/9/ca.cert"
+		sh "touch identity-files/9/ca.key"
 		def builderImage = docker.build("builder-image", "-f docker/Dockerfile.builder .")
 		builderImage.inside {
 			sh 'cd packaging && BINARIES_SERVER="http://binaries-server" dpkg-buildpackage -us -uc -b'
