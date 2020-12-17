@@ -85,12 +85,6 @@ node {
 					label: "Wait for storj-sim to be ready"
 				)
 			}
-			IDENTITY_DIR = sh (
-				script: "docker exec storj-sim storj-sim network env STORAGENODE_9_DIR",
-				returnStdout: true
-			)
-			sh "docker exec storj-sim ls /identity-files"
-			sh "ls ./identity-files"
 			apt_repository.withRun("--network ${n} --name apt-repository") { c ->
 				debian_buster_client.inside("--network ${n} -u root:root") {
 					sh "echo \"deb [trusted=yes] http://apt-repository buster-staging main\" > /etc/apt/sources.list.d/storjlabs.list"
