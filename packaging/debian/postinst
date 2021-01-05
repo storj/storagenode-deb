@@ -71,13 +71,6 @@ case "$1" in
 	    fi
 	done
 
-	# TODO: handle storage dir change during reconfigure
-	if [ -n "$old_storagedir" ] && [ "$storagedir" != "$old_storagedir" ]; then
-	    echo "New storage directory: ${storagedir} (was ${old_storagedir})"
-	else
-	    echo "Storage directory: ${storagedir}"
-	fi
-
 	# copy identity
 	if [ ! -f "/etc/storagenode/identity/identity.cert" ]; then
 	    cp ${identitydir}/identity.cert /etc/storagenode/identity
