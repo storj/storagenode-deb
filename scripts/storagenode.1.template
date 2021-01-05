@@ -1,0 +1,11 @@
+.TH STORAGENODE 1
+.SH NAME
+storagenode \- storj storage node CLI
+.SH SYNOPSIS
+.B storagenode-synopsis
+.SH DESCRIPTION
+.B storagenode
+storagenode-usage
+.SH OPTIONS
+.TP
+storagenode-flags

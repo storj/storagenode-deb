@@ -9,11 +9,41 @@ def withDockerNetwork(Closure inner) {
 }
 
 node {
+	stage('Build binaries') {
+	    docker.image('storjlabs/golang:1.15.1').inside("-u root:root") {
+			try {
+		    	checkout([$class: 'GitSCM',
+  					branches: [[name: '*/main']],
+    				doGenerateSubmoduleConfigurations: false,
+    				extensions: [],
+    			    submoduleCfg: [],
+    			    userRemoteConfigs: [[ url: 'https://github.com/storj/storj' ]]
+		    	])
+		    	sh './scripts/release.sh build -o release/storagenode storj.io/storj/cmd/storagenode'
+		    	sh './scripts/release.sh build -o release/storagenode-updater storj.io/storj/cmd/storagenode-updater'
+		    	sh 'ls'
+				sh './release/storagenode --help > release/manpage'
+				sh 'cat release/manpage'
+				stash includes: 'release/manpage*', name: 'storagenode-manpage'
+		    	stash includes: 'release/storagenode*', name: 'storagenode-binaries'
+			}
+			catch(err) {
+		    	throw err
+			}
+			finally {
+		    	sh 'git clean -fdx'
+		    	sh "rm -rf release"
+			}
+	    }
+	}
 	stage('Build Package') {
 		checkout scm
 		def builderImage = docker.build("builder-image", "-f docker/Dockerfile.builder .")
 		builderImage.inside {
-			sh 'cd packaging && dpkg-buildpackage -us -uc -b'
+			unstash 'storagenode-manpage'
+			sh "cd scripts && ./generate-manpage.sh ../release/manpage"
+			sh "cp scripts/storagenode.1 packaging/debian/storagenode.1"
+			sh 'cd packaging && BINARIES_SERVER="http://binaries-server" dpkg-buildpackage -us -uc -b'
 			stash includes: '*.deb', name: 'deb-package'
 		}
 	}

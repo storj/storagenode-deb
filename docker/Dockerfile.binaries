@@ -1,0 +1,8 @@
+FROM nginx:latest
+# maybe we should set version
+RUN apt update && apt install -y zip
+RUN ls ./release/
+RUN zip /usr/share/nginx/html/storagenode_amd64 ./release/storagenode
+RUN zip /usr/share/nginx/html/storagenode-updater_amd64 ./release/storagenode-updater
+RUN ls /usr/share/nginx/html
+
