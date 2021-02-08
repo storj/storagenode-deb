@@ -104,7 +104,7 @@ Type         = simple
 User         = storj-storagenode
 Group        = storj-storagenode
 ExecStart    = /var/lib/storagenode/storagenode run --config-dir "/etc/storagenode"
-Restart      = on-failure
+Restart      = always
 NotifyAccess = main
 
 [Install]
