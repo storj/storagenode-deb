@@ -12,7 +12,7 @@ Description: Storj V3 Storage Node installation
 Template: storagenode/identitydir
 Type: string
 Default: /home/
-Description: Directory holding the identity credentials.
+Description: Directory holding the identity credentials:
  Select the location of your identity files. You can copy the absolute path
  from the output of the identity command you ran earlier.
  Learn how to generate an identity for your storage node:
@@ -56,7 +56,7 @@ Description: Do you want to continue?
 Template: storagenode/wallet
 Type: string
 Default: 0x
-Description: Storj payout address (ERC20-compatible)
+Description: Storj payout address (ERC20-compatible):
  This payout address will receive the STORJ token payouts
  for running the storage node.
 
@@ -97,8 +97,8 @@ Description: Do you want to continue?
 Template: storagenode/email
 Type: string
 Default:
-Description: Operator information - email address
- We will notify you on this email address when a new version
+Description: Operator information - email address:
+ You will be notified you on this email address when a new version
  has been released.
 
 Template: storagenode/email/wrong_format_continue
@@ -110,7 +110,7 @@ Description: Do you want to continue?
 Template: storagenode/external_addr
 Type: string
 Default:
-Description: External address/port (<ip>:<port>)
+Description: External address/port (<ip>:<port>):
  The storage node will listen for requests on port 28967.
  You must configure your router to make this port available for public access.
  When ready, enter the external IP address or the DDNS you configured and the port
@@ -127,9 +127,9 @@ Description: Do you want to continue?
 Template: storagenode/storagedir
 Type: string
 Default: /var/lib/storagenode
-Description: Storage directory
+Description: Storage directory:
  The storage node will store the uploaded data to this
- location. Select a volume with at least 500 GB of free space.
+ location. Select a volume with at least 550 GB of free space.
 
 Template: storagenode/storagedir/does_not_exist
 Type: boolean
@@ -140,7 +140,7 @@ Description: Do you want to continue?
 Template: storagenode/diskspace
 Type: string
 Default:
-Description: Allocated disk space
+Description: Allocated disk space:
  The storage node will consume up to this amount of disk space on the
  selected storage location. Be sure not to over-allocate space! Allow
  at least 10\% extra for overhead. If you over-allocate space, you may

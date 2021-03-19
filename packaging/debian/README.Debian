@@ -1,6 +1,1 @@
-storagenode for Debian
----------------------
-
-<possible notes regarding this package - if none, delete this file>
-
- -- Storj <storj@storj.io>  Wed, 27 Nov 2019 23:37:35 +0100
+Debian package for Storj storage node.

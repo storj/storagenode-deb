@@ -1,5 +1,4 @@
-storagenode (0.0.0-1) unstable; urgency=medium
+storagenode (0.0.0-1) unstable; urgency=low
 
-  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
-
+  * Initial release
  -- Storj <storj@storj.io>  Wed, 27 Nov 2019 23:37:35 +0100
