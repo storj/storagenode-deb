@@ -20,8 +20,8 @@ set -e
 # for details, see https://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
-BINARIES_SERVER="http://10.0.2.2:8080"
 DAEMON_USER=storj-storagenode
+VERSION_SERVER_URL="#VERSION_SERVER_URL#"
 
 . /usr/share/debconf/confmodule
 
@@ -30,13 +30,18 @@ if [ "$arch" = "armhf" ]; then
     arch="arm" # use GOARCH notation
 fi
 
+get_minimum_url() {
+  process=$1
+  echo $(wget -O - "${VERSION_SERVER_URL}/processes/${process}/minimum/url?os=linux&arch=${arch}")
+}
+
 get_binary() {
     binary=$1
-    tmpfile=$(mktemp /tmp/${binary}.zip.XXXXXX)
+    url=$2
 
-    wget -O $tmpfile ${BINARIES_SERVER}/${binary}_linux_${arch}.zip
+    tmpfile=$(mktemp /tmp/${binary}.zip.XXXXXX)
+    wget -O $tmpfile $url
     unzip $tmpfile -d /var/lib/storagenode
-    mv /var/lib/storagenode/${binary}_linux_${arch} /var/lib/storagenode/${binary}
     rm $tmpfile
 }
 
@@ -63,7 +68,7 @@ case "$1" in
 	for binary in "storagenode" "storagenode-updater"; do
 	    if [ ! -f "/var/lib/storagenode/${binary}" ]; then
 	        echo "Downloading ${binary} binary..."
-	        get_binary $binary
+	        get_binary $binary $(get_minimum_url $binary)
 	    fi
 
 	    if [ ! -f "/usr/bin/${binary}" ]; then
@@ -88,7 +93,8 @@ case "$1" in
 	    --operator.wallet "$wallet" \
 	    --contact.external-address "$external_addr" \
 	    --storage.path "$storagedir" \
-	    --storage.allocated-disk-space "$diskspace"
+	    --storage.allocated-disk-space "$diskspace" \
+	    --version.server-address "$VERSION_SERVER_URL"
 
 	    # fix permissions
 	    chmod 644 /etc/storagenode/config.yaml
