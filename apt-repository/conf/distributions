@@ -3,13 +3,12 @@ Origin: StorjLabs
 Label: storj-staging
 Suite: buster-staging
 Codename: buster-staging
-Architectures: i386 amd64 source
+Architectures: arm armhf arm64 amd64
 Components: main
 Description: Storj storage node Buster staging repository
 Contents: .gz .bz2
-Tracking: keep
-SignWith: yes
-NotAutomatic: yes 
+Tracking: all
+NotAutomatic: yes
 Log: packages.storj-buster-staging.log
  --type=dsc email-changes
 
@@ -18,8 +17,8 @@ Origin: StorjLabs
 Label: storj-prod 
 Suite: buster-prod
 Codename: buster-prod
-Architectures: i386 amd64 source
-Components: main 
+Architectures: arm armhf arm64 amd64
+Components: main
 Description: Storj storage node Buster prod repository
 Contents: .gz .bz2
 Tracking: keep
