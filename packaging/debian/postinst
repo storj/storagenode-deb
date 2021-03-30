@@ -66,11 +66,11 @@ case "$1" in
     db_get storagenode/diskspace
     diskspace="$RET"
 
-	  for binary in "storagenode" "storagenode-updater"; do
-	      if [ ! -f "/var/lib/storagenode/${binary}" ]; then
-	        echo "Downloading ${binary} binary..."
-	        get_binary $binary $(get_minimum_url $binary)
-	      fi
+    for binary in "storagenode" "storagenode-updater"; do
+        if [ ! -f "/var/lib/storagenode/${binary}" ]; then
+            echo "Downloading ${binary} binary..."
+            get_binary $binary $(get_minimum_url $binary)
+        fi
 
         if [ ! -f "/usr/bin/${binary}" ]; then
             ln -s /var/lib/storagenode/${binary} /usr/bin/${binary}
