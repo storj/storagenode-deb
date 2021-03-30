@@ -110,7 +110,7 @@ Description: Do you want to continue?
 Template: storagenode/external_addr
 Type: string
 Default:
-Description: External address/port (<ip>:<port>):
+Description: External address/port (<host>:<port>):
  The storage node will listen for requests on port 28967.
  You must configure your router to make this port available for public access.
  When ready, enter the external IP address or the DDNS you configured and the port
@@ -121,7 +121,7 @@ Template: storagenode/external_addr/not_ip_port_continue
 Type: boolean
 Default: false
 Description: Do you want to continue?
- You did not specify a valid external <ip>:<port>.
+ You did not specify a valid external <host>:<port>.
  You will not be able to connect without a valid external address.
 
 Template: storagenode/storagedir

@@ -31,8 +31,8 @@ if [ "$arch" = "armhf" ]; then
 fi
 
 get_minimum_url() {
-  process=$1
-  echo $(wget -O - "${VERSION_SERVER_URL}/processes/${process}/minimum/url?os=linux&arch=${arch}")
+    process=$1
+    echo $(wget -O - "${VERSION_SERVER_URL}/processes/${process}/minimum/url?os=linux&arch=${arch}")
 }
 
 get_binary() {
