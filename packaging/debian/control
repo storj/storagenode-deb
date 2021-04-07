@@ -1,5 +1,5 @@
 Source: storagenode
-Section: unknown
+Section: net
 Priority: optional
 Maintainer: Storj <storj@storj.io>
 Build-Depends: debhelper (>= 12)
