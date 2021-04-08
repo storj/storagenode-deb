@@ -12,7 +12,7 @@ Package: storagenode
 Architecture: all
 Depends: ${shlibs:Depends}, ${misc:Depends}, wget, unzip
 Description: Storage Node implements piece storing on the Storj network.
-    The storage node’s role is to store and return data.
-    Aside from reliably storing data, nodes should provide network bandwidth and appropriate responsiveness.
-    Storage nodes are selected to store data based on various criteria: ping time, latency, throughput, bandwidth, sufficient disk space,
-    geographic location, uptime, history of responding accurately to audits, and so forth. In return for their service, nodes are paid.
+ Storage nodes are selected to store data based on various criteria:
+ ping time, latency, throughput, bandwidth, sufficient disk space,
+ geographic location, uptime, history of responding accurately to audits.
+ In return for their service, nodes are paid.
