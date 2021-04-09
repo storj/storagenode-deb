@@ -96,11 +96,10 @@ case "$1" in
         --storage.path "$storagedir" \
         --storage.allocated-disk-space "$diskspace" \
         --version.server-address "$VERSION_SERVER_URL"
-
-        # fix permissions
-        chmod 644 /etc/storagenode/config.yaml
     fi
-	
+    # fix permissions
+    chmod 644 /etc/storagenode/config.yaml
+
 	# add user and fix ownership
     if ! getent passwd $DAEMON_USER > /dev/null; then
         useradd --system -m -d /var/lib/storagenode --shell=/usr/sbin/nologin --user-group $DAEMON_USER  > /dev/null
