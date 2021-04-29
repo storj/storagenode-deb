@@ -6,7 +6,7 @@ set -e
 
 setup_uplink() {
 	curl -LJ0 --output /tmp/uplink.zip https://github.com/storj/storj/releases/download/v1.28.2/uplink_linux_amd64.zip
-	unzip /tmp/uplink.zip -d /tmp
+	unzip -o /tmp/uplink.zip -d /tmp
 }
 
 setup_uplink
