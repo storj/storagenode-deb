@@ -15,5 +15,5 @@ paths=$(find apt-repository/www -mindepth 1 -type f)
 
 for p in ${paths[@]}; do
 	echo "-> pushing ${p}"
-	/tmp/uplink --access $STORJNODE_DEB_ACCESS cp ${p} sj://$STORJNODE_DEB_BUCKET/${p#apt-repository/www/}
+	/tmp/uplink cp --access $STORJNODE_DEB_ACCESS ${p} sj://$STORJNODE_DEB_BUCKET/${p#apt-repository/www/}
 done
