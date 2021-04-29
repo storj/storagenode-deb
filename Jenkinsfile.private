@@ -78,6 +78,7 @@ node {
     }
     stage('Push to staging') {
         withCredentials([string(credentialsId: 'STORJNODE_DEB_ACCESS', variable: 'STORJNODE_DEB_ACCESS'), string(credentialsId: 'STORJNODE_DEB_BUCKET', variable: 'STORJNODE_DEB_BUCKET')]) {
+            unstash 'deb-package'
             sh '''
                 STORJNODE_DEB_ACCESS=$STORJNODE_DEB_ACCESS STORJNODE_DEB_BUCKET=$STORJNODE_DEB_BUCKET-staging scripts/push-to-dcs.sh
             '''
@@ -86,6 +87,7 @@ node {
     stage('Push to prod') {
         if (params.DEPLOY_PROD) {
             withCredentials([string(credentialsId: 'STORJNODE_DEB_ACCESS', variable: 'STORJNODE_DEB_ACCESS'), string(credentialsId: 'STORJNODE_DEB_BUCKET', variable: 'STORJNODE_DEB_BUCKET')]) {
+                unstash 'deb-package'
                 sh '''
                     STORJNODE_DEB_ACCESS=$STORJNODE_DEB_ACCESS STORJNODE_DEB_BUCKET=$STORJNODE_DEB_BUCKET scripts/push-to-dcs.sh
                 '''
